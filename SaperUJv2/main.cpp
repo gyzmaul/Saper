@@ -4,22 +4,30 @@
 #include <iostream>
 #include <time.h>
 
-int status = 0;
+int status = 1;
+
+//status = 1  menu
+//status = 2  loading
+//status = 3  game
+//status = 4  lost
+//status = 5  won
 
 int main()
 {
 	srand(time(NULL));
 
+	bool windowIsOpen = 1;
+
 	int sizeX = 26;
 	int sizeY = 38;
-	int bombs = 310;
+	int bombs = 30;
 	int coX, coY;
 	Cell** grid = NULL;
 
 	const int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
 	const int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
-	InitWindow(screenWidth, screenHeight, "Samper - yebac UJ");
+	InitWindow(screenWidth, screenHeight, "Samper");
 
 	Rectangle easyRec = { screenWidth / 4,       screenHeight / 6, screenWidth / 2, screenHeight / 6 };
 	Rectangle medRec = { screenWidth / 4, 2.5 * screenHeight / 6, screenWidth / 2, screenHeight / 6 };
@@ -27,11 +35,11 @@ int main()
 
 	SetTargetFPS(120);
 
-	while (!WindowShouldClose())
+	while (windowIsOpen)
 	{
 		//-MENU-----------------------------------------------------------------------------
 
-		while (!status)
+		while (status==1)
 		{
 			BeginDrawing();
 
@@ -44,7 +52,13 @@ int main()
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
-				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) status = 1;
+				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) status = 2;
+			}
+
+			if (WindowShouldClose())
+			{
+				status = 0;
+				break;
 			}
 		}
 
@@ -53,10 +67,10 @@ int main()
 		grid = fnMemoryAlloc(sizeX, sizeY, grid);
 		CellIndex(grid, sizeX, sizeY);
 
-		int startX;
-		int startY;
+		int startX = 0;
+		int startY = 0;
 
-		while (status)
+		while (status==2)
 		{
 			BeginDrawing();
 			ClearBackground(BLACK);
@@ -75,23 +89,29 @@ int main()
 			{
 				startX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				startY = (GetMouseY() - menuHeight - SPACE + 1) / (POLE + SPACE);
+				status = 3;
+			}
+
+			if (WindowShouldClose())
+			{
 				status = 0;
+				break;
 			}
 		}
 
-		do
+		do //Setting up the board
 		{
 			CellSetUJ(sizeX, sizeY, bombs, grid, startX, startY);
 			CellFillNumbers(sizeX, sizeY, grid);
-		} while (grid[startX][startY].bombsAround > 0 || grid[startX][startY].isBomb == true);
+		} while (grid[startX][startY].bombsAround > 0 || grid[startX][startY].isBomb == true); //first square must have 0 bombs around
 
-		status=CellReveal(grid, startX, startY, sizeX, sizeY);
+		CellReveal(grid, startX, startY, sizeX, sizeY, &status);
 
-		status = 1;
+		//if (status != 0) status = 3;
 
 		//-GAME-----------------------------------------------------------------------------
 
-		while (status)
+		while (status==3)
 		{
 			BeginDrawing();
 			ClearBackground(BLACK);
@@ -111,7 +131,7 @@ int main()
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				coY = (GetMouseY() - menuHeight - SPACE + 1) / (POLE + SPACE);
 
-				if (CheckIndex(coX, coY, sizeX, sizeY)) status=CellReveal(grid, coX, coY, sizeX, sizeY);
+				if (CheckIndex(coX, coY, sizeX, sizeY)) CellReveal(grid, coX, coY, sizeX, sizeY, &status);
 			}
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
@@ -122,12 +142,19 @@ int main()
 				else if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isFlag == true && grid[coX][coY].isRevealed == false) grid[coX][coY].isFlag = false;
 			}
 
-			if (WindowShouldClose()) status = 0;
+
+
+			if (WindowShouldClose())
+			{
+				status = 0;
+				break;
+			}
+
 		}
 
-		//-POST-GAME------------------------------------------------------------------------
+		//-POST-GAME-LOST-------------------------------------------------------------------
 
-		while (!status)
+		while (status==4)
 		{
 			BeginDrawing();
 
@@ -140,10 +167,40 @@ int main()
 			{
 				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) status = 1;
 			}
+
+			if (WindowShouldClose())
+			{
+				status = 0;
+				break;
+			}
+		}
+		
+		//-POST-GAME-WON--------------------------------------------------------------------
+
+		while (status==5)
+		{
+			BeginDrawing();
+
+			ClearBackground(BLACK);
+			DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, LIGHTGRAY);
+
+			EndDrawing();
+
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) status = 1;
+			}
+
+			if (WindowShouldClose())
+			{
+				status = 0;
+				break;
+			}
 		}
 
 		fnMemoryFree(sizeX, grid);
-		status = 0;
+		if (status == 0) windowIsOpen = false;
+		else status = 1;
 	}
 
 	CloseWindow();

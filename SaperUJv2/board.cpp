@@ -3,9 +3,6 @@
 #include "raylib.h"
 #include <iostream>
 
-
-
-
 void CellDraw(Cell** grid, int i, int j)
 {
 	int x = MARGINES + i * (POLE + SPACE);
@@ -26,9 +23,8 @@ void CellDraw(Cell** grid, int i, int j)
 	}
 }
 
-int CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY)
+void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status)
 {
-	int status = 1;
 	if (grid[i][j].isFlag == 0)
 	{
 		if (grid[i][j].isRevealed == true && grid[i][j].bombsAround == FlagCount(grid, i, j, sizeX, sizeY))
@@ -39,7 +35,7 @@ int CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY)
 				{
 					if (CheckIndex(i + x, j + y, sizeX, sizeY))
 					{
-						if (grid[i + x][j + y].isRevealed == false) status = CellReveal(grid, i + x, j + y, sizeX, sizeY);
+						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status);
 					}
 				}
 			}
@@ -47,8 +43,8 @@ int CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY)
 
 		grid[i][j].isRevealed = true;
 
-		if (grid[i][j].isBomb == 1) status = 0;
-		if (grid[i][j].bombsAround == 0)
+		if (grid[i][j].isBomb == 1) *status = 4;
+		else if (grid[i][j].bombsAround == 0)
 		{
 			for (int x = -1; x <= 1; x++)
 			{
@@ -56,13 +52,12 @@ int CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY)
 				{
 					if (CheckIndex(i + x, j + y, sizeX, sizeY))
 					{
-						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY);
+						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status);
 					}
 				}
 			}
 		}
 	}
-	return status;
 }
 
 void CellFillNumbers(int sizeX, int sizeY, Cell** grid)
