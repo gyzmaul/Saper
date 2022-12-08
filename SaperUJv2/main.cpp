@@ -6,6 +6,7 @@
 
 int status = 1;
 
+//status = 0  exit
 //status = 1  menu
 //status = 2  loading
 //status = 3  game

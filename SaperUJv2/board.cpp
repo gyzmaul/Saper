@@ -105,3 +105,8 @@ void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int start
 		grid[bombX][bombY].isBomb = 1;
 	}
 }
+
+void DrawTaskbar()
+{
+
+}
