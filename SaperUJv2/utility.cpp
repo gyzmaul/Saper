@@ -71,4 +71,9 @@ int FlagCount(Cell** grid, int a, int b, int sizeX, int sizeY)
 
 	return flags;
 }
+
+void CheckWin(int bombs, int revealed, int* status)
+{
+	if (revealed == bombs) *status = 5;
+}
 	

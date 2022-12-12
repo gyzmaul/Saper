@@ -3,6 +3,14 @@
 #include "raylib.h"
 #include <iostream>
 
+
+int sizeX = 26;
+int sizeY = 38;
+
+const int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
+const int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+const int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+
 void CellDraw(Cell** grid, int i, int j)
 {
 	int x = MARGINES + i * (POLE + SPACE);
@@ -23,7 +31,7 @@ void CellDraw(Cell** grid, int i, int j)
 	}
 }
 
-void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status)
+void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, int* revealed)
 {
 	if (grid[i][j].isFlag == 0)
 	{
@@ -35,12 +43,13 @@ void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status)
 				{
 					if (CheckIndex(i + x, j + y, sizeX, sizeY))
 					{
-						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status);
+						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status, revealed);
 					}
 				}
 			}
 		}
 
+		if(!grid[i][j].isRevealed)(*revealed)--;
 		grid[i][j].isRevealed = true;
 
 		if (grid[i][j].isBomb == 1) *status = 4;
@@ -52,7 +61,7 @@ void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status)
 				{
 					if (CheckIndex(i + x, j + y, sizeX, sizeY))
 					{
-						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status);
+						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status, revealed);
 					}
 				}
 			}
@@ -106,7 +115,10 @@ void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int start
 	}
 }
 
-void DrawTaskbar()
+void DrawTaskbar(int bombsLeft)
 {
-
+	DrawRectangle(0, 0, screenWidth, menuHeight, DARKGRAY);
+	//DrawRectangle(0, menuHeight - MARGINES, screenWidth, 2, DARKGRAY);
+	DrawRectangle(MARGINES, MARGINES+2, 4 * POLE + 3 * SPACE, 2 * POLE, BLACK);
+	DrawText(TextFormat("%d", bombsLeft), MARGINES + POLE / 2, MARGINES + 2 * SPACE +1, 2 * POLE, RED);
 }
