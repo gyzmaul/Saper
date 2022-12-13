@@ -18,7 +18,7 @@ void CellDraw(Cell** grid, int i, int j, int status);
 void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** aTab, int startX, int startY);
 void CellFillNumbers(int sizeX, int sizeY, Cell** grid);
 void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int*status, int* revealed);
-void DrawTaskbar(int bombsLeft);
+void DrawTaskbar(int bombsLeft, double time);
 void sizeEasy(int* x, int* y, int* b);
 void sizeMed(int* x, int* y, int* b);
 void sizeHard(int* x, int* y, int* b);

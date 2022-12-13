@@ -40,6 +40,7 @@ int main()
 
 	double* timeStart;
 	double* timeStop;
+	double* timeTemp;
 
 	int coX, coY;
 	Cell** grid = NULL;
@@ -105,6 +106,10 @@ int main()
 		if (timeStart == NULL) exit(-1);
 		timeStop = (double*)calloc(1, sizeof(double));
 		if (timeStop == NULL) exit(-1);
+		timeTemp = (double*)calloc(1, sizeof(double));
+		if (timeTemp == NULL) exit(-1);
+		*timeTemp = 0;
+		*timeStart = 0;
 
 		int startX = 0;
 		int startY = 0;
@@ -116,7 +121,7 @@ int main()
 			BeginDrawing();
 			ClearBackground(BLACK);
 
-			DrawTaskbar((bombs - flagsSet));
+			DrawTaskbar((bombs - flagsSet), (*timeTemp - *timeStart) / CLOCKS_PER_SEC);
 
 			for (int i = 0; i < sizeX; i++)
 			{
@@ -159,7 +164,7 @@ int main()
 			BeginDrawing();
 			ClearBackground(BLACK);
 
-			DrawTaskbar((bombs-flagsSet));
+			DrawTaskbar((bombs-flagsSet), (*timeTemp-*timeStart)/CLOCKS_PER_SEC);
 
 			for (int i = 0; i < sizeX; i++)
 			{
@@ -188,6 +193,7 @@ int main()
 			}
 
 			CheckWin(bombs, *revealed, &status);
+			*timeTemp = clock();
 
 			if (WindowShouldClose())
 			{
@@ -200,40 +206,28 @@ int main()
 		*timeStop = clock();
 
 		
+		fnMemoryFree(sizeX, grid);
 
-		//if(status != 0) CloseWindow();
+		if(status != 0) CloseWindow();
 
 		//window adjustment
 
-		/*sizeMed(&sizeX, &sizeY, &bombs);
+		sizeMed(&sizeX, &sizeY, &bombs);
 
 		menuHeight = 2 * POLE + SPACE;
 		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
-		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;*/
+		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 		
 		//-POST-GAME-LOST-------------------------------------------------------------------
 
-		/*if (status != 0)
+		if (status != 0)
 		{
 			OpenWindow("Endgame");
-		}*/
+		}
 
 		while (status==4)
 		{
-			BeginDrawing();
-			ClearBackground(BLACK);
-
-			DrawTaskbar((bombs - flagsSet));
-
-			for (int i = 0; i < sizeX; i++)
-			{
-				for (int j = 0; j < sizeY; j++)
-				{
-					CellDraw(grid, i, j, status);
-				}
-			}
-
-			//DrawEndgameLose();
+			DrawEndgameLose();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
@@ -267,9 +261,9 @@ int main()
 
 		CloseWindow();
 
-		fnMemoryFree(sizeX, grid);
 		free(timeStart);
 		free(timeStop);
+		free(timeTemp);
 		flagsSet = 0;
 		*revealed = sizeX*sizeY;
 

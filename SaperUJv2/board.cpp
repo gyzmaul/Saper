@@ -162,12 +162,16 @@ void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int start
 	}
 }
 
-void DrawTaskbar(int bombsLeft)
+void DrawTaskbar(int bombsLeft, double time)
 {
 	DrawRectangle(0, 0, screenWidth, menuHeight, DARKGRAY);
 	//DrawRectangle(0, menuHeight - MARGINES, screenWidth, 2, DARKGRAY);
 	DrawRectangle(MARGINES, MARGINES+2, 4 * POLE + 3 * SPACE, 2 * POLE, BLACK);
 	DrawText(TextFormat("%d", bombsLeft), MARGINES + POLE / 2, MARGINES + 2 * SPACE +1, 2 * POLE, RED);
+
+	DrawRectangle(screenWidth - MARGINES - (6 * POLE + 5 * SPACE), MARGINES + 2, 6 * POLE + 5 * SPACE, 2 * POLE, BLACK);
+	if(((int)time%60)<10) DrawText(TextFormat("0%d:0%d", (int)(time/60), (int)((int)time%60)), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
+	else DrawText(TextFormat("0%d:%d", (int)(time/60), (int)((int)time%60)), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
 }
 
 void OpenWindow(const char* caption)
@@ -188,22 +192,23 @@ void DrawMenu()
 	EndDrawing();
 }
 
+void DrawEndgameLose()
+{
+	BeginDrawing();
+
+	ClearBackground(BLACK);
+	DrawText(TextFormat("Przegrales"), screenWidth / 8  +10, screenHeight / 6, 2 * POLE, RED);
+	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 12, DARKBROWN);
+
+	EndDrawing();
+}
+
 void DrawEndgameWin()
 {
 	BeginDrawing();
 
 	ClearBackground(BLACK);
 	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, DARKGREEN);
-
-	EndDrawing();
-}
-
-void DrawEndgameLose()
-{
-	BeginDrawing();
-
-	ClearBackground(BLACK);
-	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, DARKBROWN);
 
 	EndDrawing();
 }
