@@ -2,14 +2,61 @@
 #include "board.h"
 #include "raylib.h"
 #include <iostream>
+#include <string>
 
+using namespace std;
 
-int sizeX = 26;
-int sizeY = 38;
+int sizeX = HARDX;
+int sizeY = HARDY;
 
-const int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
-const int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
-const int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
+int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+
+void sizeEasy(int* x, int* y, int* b)
+{
+	sizeX = EASYX;
+	sizeY = EASYY;
+
+	*x = EASYX;
+	*y = EASYY;
+	*b = EASYB;
+
+	menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
+	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+	screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+
+}
+
+void sizeMed(int* x, int* y, int* b)
+{
+	sizeX = MEDX;
+	sizeY = MEDY;
+
+	*x = MEDX;
+	*y = MEDY;
+	*b = MEDB;
+
+	menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
+	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+	screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+
+}
+
+void sizeHard(int* x, int* y, int* b)
+{
+	sizeX = HARDX;
+	sizeY = HARDY;
+
+	*x = HARDX;
+	*y = HARDY;
+	*b = HARDB;
+
+	menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
+	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+	screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+
+}
 
 void CellDraw(Cell** grid, int i, int j)
 {
@@ -121,4 +168,42 @@ void DrawTaskbar(int bombsLeft)
 	//DrawRectangle(0, menuHeight - MARGINES, screenWidth, 2, DARKGRAY);
 	DrawRectangle(MARGINES, MARGINES+2, 4 * POLE + 3 * SPACE, 2 * POLE, BLACK);
 	DrawText(TextFormat("%d", bombsLeft), MARGINES + POLE / 2, MARGINES + 2 * SPACE +1, 2 * POLE, RED);
+}
+
+void OpenWindow(const char* caption)
+{
+	InitWindow(screenWidth, screenHeight, caption);
+	SetTargetFPS(144);
+}
+
+void DrawMenu()
+{
+	BeginDrawing();
+
+	ClearBackground(BLACK);
+	DrawRectangle(screenWidth / 4, screenHeight / 6, screenWidth / 2, screenHeight / 6, GREEN);
+	DrawRectangle(screenWidth / 4, 2.5 * screenHeight / 6, screenWidth / 2, screenHeight / 6, YELLOW);
+	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, RED);
+
+	EndDrawing();
+}
+
+void DrawEndgameWin()
+{
+	BeginDrawing();
+
+	ClearBackground(BLACK);
+	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, DARKGREEN);
+
+	EndDrawing();
+}
+
+void DrawEndgameLose()
+{
+	BeginDrawing();
+
+	ClearBackground(BLACK);
+	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, DARKBROWN);
+
+	EndDrawing();
 }

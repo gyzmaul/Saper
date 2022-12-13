@@ -3,6 +3,7 @@
 #include "board.h"
 #include <iostream>
 #include <time.h>
+#include <string>
 
 int status = 1;
 
@@ -17,18 +18,24 @@ int main()
 {
 	srand(time(NULL));
 
-	bool windowIsOpen = 1;
+	bool gameIsRunning = 1;
 
-	int sizeX = 26;
-	int sizeY = 38;
-	int bombs = 30;
+	int mode = 0;
+	//mode = 1 easy
+	//mode = 2 med
+	//mode = 3 hard
 
-	const int menuHeight = 2 * POLE + SPACE;
-	const int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
-	const int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+	int sizeX = HARDX;
+	int sizeY = HARDY;
+	int bombs = HARDB;
+
+	//char* caption;
+
+	int menuHeight = 2 * POLE + SPACE;
+	int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+	int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 	int flagsSet = 0;
-
 	int* revealed;
 	int rev = sizeX * sizeY;
 	revealed = &rev;
@@ -39,32 +46,27 @@ int main()
 	int coX, coY;
 	Cell** grid = NULL;
 
-	InitWindow(screenWidth, screenHeight, "Samper");
-
 	Rectangle easyRec = { screenWidth / 4,       screenHeight / 6, screenWidth / 2, screenHeight / 6 };
-	Rectangle medRec = { screenWidth / 4, 2.5 * screenHeight / 6, screenWidth / 2, screenHeight / 6 };
-	Rectangle hardRec = { screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6 };
+	Rectangle medRec  = { screenWidth / 4, 2.5 * screenHeight / 6, screenWidth / 2, screenHeight / 6 };
+	Rectangle hardRec = { screenWidth / 4, 4 *   screenHeight / 6, screenWidth / 2, screenHeight / 6 };
 
-	SetTargetFPS(120);
-
-	while (windowIsOpen)
+	while (gameIsRunning)
 	{
 		//-MENU-----------------------------------------------------------------------------
 
+		//*caption = 'Meno';
+
+		OpenWindow("Menu");
+
 		while (status==1)
 		{
-			BeginDrawing();
-
-			ClearBackground(BLACK);
-			DrawRectangle(screenWidth / 4, screenHeight / 6, screenWidth / 2, screenHeight / 6, GREEN);
-			DrawRectangle(screenWidth / 4, 2.5 * screenHeight / 6, screenWidth / 2, screenHeight / 6, YELLOW);
-			DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, RED);
-
-			EndDrawing();
+			DrawMenu();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
-				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) status = 2;
+				if (CheckCollisionPointRec(GetMousePosition(), easyRec)) { status = 2; mode = 1; }
+				if (CheckCollisionPointRec(GetMousePosition(), medRec )) { status = 2; mode = 2; }
+				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) { status = 2; mode = 3; }
 			}
 
 			if (WindowShouldClose())
@@ -74,7 +76,31 @@ int main()
 			}
 		}
 
+		if(status != 0) CloseWindow();
+
 		//-LOADING--------------------------------------------------------------------------
+
+		switch (mode)
+		{
+		case 1: sizeEasy(&sizeX, &sizeY, &bombs); break;
+
+		case 2: sizeMed(&sizeX, &sizeY, &bombs); break;
+
+		case 3: sizeHard(&sizeX, &sizeY, &bombs); break;
+
+		default: break;
+		}
+
+		menuHeight = 2 * POLE + SPACE;
+		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+
+		*revealed = sizeX * sizeY;
+
+		if (status != 0)
+		{
+			OpenWindow("Game");
+		}
 
 		grid = fnMemoryAlloc(sizeX, sizeY, grid);
 		CellIndex(grid, sizeX, sizeY);
@@ -86,6 +112,8 @@ int main()
 
 		int startX = 0;
 		int startY = 0;
+
+		//-GAME-FIRST-MOVE-----------------------------------------------------------------
 
 		while (status==2)
 		{
@@ -127,8 +155,6 @@ int main()
 		CellReveal(grid, startX, startY, sizeX, sizeY, &status, revealed);
 
 		*timeStart = clock();
-
-		//eee
 
 		//-GAME-----------------------------------------------------------------------------
 
@@ -177,16 +203,28 @@ int main()
 
 		*timeStop = clock();
 
+		fnMemoryFree(sizeX, grid);
+
+		if(status != 0) CloseWindow();
+
+		//window adjustment
+
+		sizeHard(&sizeX, &sizeY, &bombs);
+
+		menuHeight = 2 * POLE + SPACE;
+		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+		
 		//-POST-GAME-LOST-------------------------------------------------------------------
+
+		if (status != 0)
+		{
+			OpenWindow("Endgame");
+		}
 
 		while (status==4)
 		{
-			BeginDrawing();
-
-			ClearBackground(BLACK);
-			DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, DARKBROWN);
-
-			EndDrawing();
+			DrawEndgameLose();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
@@ -204,12 +242,7 @@ int main()
 
 		while (status==5)
 		{
-			BeginDrawing();
-
-			ClearBackground(BLACK);
-			DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, DARKGREEN);
-
-			EndDrawing();
+			DrawEndgameWin();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
@@ -223,16 +256,16 @@ int main()
 			}
 		}
 
-		fnMemoryFree(sizeX, grid);
+		CloseWindow();
+
 		free(timeStart);
 		free(timeStop);
-		if (status == 0) windowIsOpen = false;
-		else status = 1;
 		flagsSet = 0;
 		*revealed = sizeX*sizeY;
-	}
 
-	CloseWindow();
+		if (status == 0) gameIsRunning = false;
+		else status = 1;
+	}
 
 	return 0;
 }
