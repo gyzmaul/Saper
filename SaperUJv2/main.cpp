@@ -122,7 +122,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j);
+					CellDraw(grid, i, j, status);
 				}
 			}
 
@@ -165,7 +165,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j);
+					CellDraw(grid, i, j, status);
 				}
 			}
 
@@ -199,28 +199,41 @@ int main()
 
 		*timeStop = clock();
 
-		fnMemoryFree(sizeX, grid);
+		
 
-		if(status != 0) CloseWindow();
+		//if(status != 0) CloseWindow();
 
 		//window adjustment
 
-		sizeMed(&sizeX, &sizeY, &bombs);
+		/*sizeMed(&sizeX, &sizeY, &bombs);
 
 		menuHeight = 2 * POLE + SPACE;
 		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
-		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;*/
 		
 		//-POST-GAME-LOST-------------------------------------------------------------------
 
-		if (status != 0)
+		/*if (status != 0)
 		{
 			OpenWindow("Endgame");
-		}
+		}*/
 
 		while (status==4)
 		{
-			DrawEndgameLose();
+			BeginDrawing();
+			ClearBackground(BLACK);
+
+			DrawTaskbar((bombs - flagsSet));
+
+			for (int i = 0; i < sizeX; i++)
+			{
+				for (int j = 0; j < sizeY; j++)
+				{
+					CellDraw(grid, i, j, status);
+				}
+			}
+
+			//DrawEndgameLose();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
@@ -254,6 +267,7 @@ int main()
 
 		CloseWindow();
 
+		fnMemoryFree(sizeX, grid);
 		free(timeStart);
 		free(timeStop);
 		flagsSet = 0;

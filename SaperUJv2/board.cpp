@@ -58,16 +58,16 @@ void sizeHard(int* x, int* y, int* b)
 
 }
 
-void CellDraw(Cell** grid, int i, int j)
+void CellDraw(Cell** grid, int i, int j, int status)
 {
 	int x = MARGINES + i * (POLE + SPACE);
 	int y = MARGINES + j * (POLE + SPACE) + menuHeight;
 
+	if (grid[i][j].isBomb == 1 && status==4) DrawRectangle(x, y, POLE, POLE, RED);
 
-	if (grid[i][j].isRevealed == true && grid[i][j].isFlag == false)
+	else if (grid[i][j].isRevealed == true && grid[i][j].isFlag == false)
 	{
-		if (grid[i][j].isBomb == 1) DrawRectangle(x, y, POLE, POLE, RED);
-		else if (grid[i][j].bombsAround == 0) DrawRectangle(x, y, POLE, POLE, BLACK);
+		if (grid[i][j].bombsAround == 0) DrawRectangle(x, y, POLE, POLE, BLACK);
 		else if (grid[i][j].bombsAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
 	}
 	else DrawRectangle(x, y, POLE, POLE, PINK);

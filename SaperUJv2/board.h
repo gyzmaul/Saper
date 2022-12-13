@@ -6,7 +6,7 @@
 
 #define EASYX 10
 #define EASYY 16
-#define EASYB 28
+#define EASYB 24
 #define MEDX 16
 #define MEDY 24
 #define MEDB 96
@@ -14,7 +14,7 @@
 #define HARDY 38
 #define HARDB 310
 
-void CellDraw(Cell** grid, int i, int j);
+void CellDraw(Cell** grid, int i, int j, int status);
 void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** aTab, int startX, int startY);
 void CellFillNumbers(int sizeX, int sizeY, Cell** grid);
 void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int*status, int* revealed);
