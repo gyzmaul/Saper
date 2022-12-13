@@ -6,8 +6,8 @@
 
 using namespace std;
 
-int sizeX = HARDX;
-int sizeY = HARDY;
+int sizeX = MEDX;
+int sizeY = MEDY;
 
 int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
 int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
@@ -74,7 +74,7 @@ void CellDraw(Cell** grid, int i, int j)
 
 	if (grid[i][j].isFlag == true)
 	{
-		DrawText(TextFormat("F"), x + 6, y, POLE, DARKGRAY);
+		DrawText(TextFormat("F"), x + 4, y+1, POLE, DARKGRAY);
 	}
 }
 

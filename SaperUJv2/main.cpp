@@ -25,11 +25,9 @@ int main()
 	//mode = 2 med
 	//mode = 3 hard
 
-	int sizeX = HARDX;
-	int sizeY = HARDY;
-	int bombs = HARDB;
-
-	//char* caption;
+	int sizeX = MEDX;
+	int sizeY = MEDY;
+	int bombs = MEDB;
 
 	int menuHeight = 2 * POLE + SPACE;
 	int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
@@ -53,8 +51,6 @@ int main()
 	while (gameIsRunning)
 	{
 		//-MENU-----------------------------------------------------------------------------
-
-		//*caption = 'Meno';
 
 		OpenWindow("Menu");
 
@@ -209,7 +205,7 @@ int main()
 
 		//window adjustment
 
-		sizeHard(&sizeX, &sizeY, &bombs);
+		sizeMed(&sizeX, &sizeY, &bombs);
 
 		menuHeight = 2 * POLE + SPACE;
 		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;

@@ -5,8 +5,8 @@
 #define MARGINES 2
 
 #define EASYX 10
-#define EASYY 20
-#define EASYB 35
+#define EASYY 16
+#define EASYB 28
 #define MEDX 16
 #define MEDY 24
 #define MEDB 96
