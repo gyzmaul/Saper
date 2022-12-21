@@ -58,7 +58,7 @@ void sizeHard(int* x, int* y, int* b)
 
 }
 
-void CellDraw(Cell** grid, int i, int j, int status)
+void CellDraw(Cell** grid, int i, int j, int status, Texture2D UJbomb)
 {
 	int x = MARGINES + i * (POLE + SPACE);
 	int y = MARGINES + j * (POLE + SPACE) + menuHeight;
@@ -74,7 +74,8 @@ void CellDraw(Cell** grid, int i, int j, int status)
 
 	if (grid[i][j].isFlag == true)
 	{
-		DrawText(TextFormat("F"), x + 4, y+1, POLE, DARKGRAY);
+		//DrawText(TextFormat("F"), x + 4, y+1, POLE, DARKGRAY);
+		DrawTexture(UJbomb, x, y, WHITE);
 	}
 }
 
@@ -162,7 +163,7 @@ void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int start
 	}
 }
 
-void DrawTaskbar(int bombsLeft, double time)
+void DrawTaskbar(int bombsLeft, int time)
 {
 	DrawRectangle(0, 0, screenWidth, menuHeight, DARKGRAY);
 	//DrawRectangle(0, menuHeight - MARGINES, screenWidth, 2, DARKGRAY);
@@ -170,8 +171,8 @@ void DrawTaskbar(int bombsLeft, double time)
 	DrawText(TextFormat("%d", bombsLeft), MARGINES + POLE / 2, MARGINES + 2 * SPACE +1, 2 * POLE, RED);
 
 	DrawRectangle(screenWidth - MARGINES - (6 * POLE + 5 * SPACE), MARGINES + 2, 6 * POLE + 5 * SPACE, 2 * POLE, BLACK);
-	if(((int)time%60)<10) DrawText(TextFormat("0%d:0%d", (int)(time/60), (int)((int)time%60)), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
-	else DrawText(TextFormat("0%d:%d", (int)(time/60), (int)((int)time%60)), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
+	if((time%60)<10) DrawText(TextFormat("0%d:0%d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
+	else DrawText(TextFormat("0%d:%d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
 }
 
 void OpenWindow(const char* caption)
@@ -185,9 +186,13 @@ void DrawMenu()
 	BeginDrawing();
 
 	ClearBackground(BLACK);
-	DrawRectangle(screenWidth / 4, screenHeight / 6, screenWidth / 2, screenHeight / 6, GREEN);
-	DrawRectangle(screenWidth / 4, 2.5 * screenHeight / 6, screenWidth / 2, screenHeight / 6, YELLOW);
-	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, RED);
+	DrawRectangle(screenWidth / 4,  7 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
+	DrawRectangle(screenWidth / 4,  8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
+	DrawRectangle(screenWidth / 4, 10 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
+	DrawText(TextFormat("easy")  , screenWidth / 4 + 38,   7 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
+	DrawText(TextFormat("medium"), screenWidth / 4 + 20, 8.5 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
+	DrawText(TextFormat("hard")  , screenWidth / 4 + 38,  10 * screenHeight / 12 + 5, screenHeight / 12 - 4, RED);
+
 
 	EndDrawing();
 }
@@ -203,12 +208,15 @@ void DrawEndgameLose()
 	EndDrawing();
 }
 
-void DrawEndgameWin()
+void DrawEndgameWin(int time)
 {
 	BeginDrawing();
 
 	ClearBackground(BLACK);
-	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 6, DARKGREEN);
+	DrawText(TextFormat("Wygrales"), screenWidth / 4 - 2, screenHeight / 6, 2 * POLE, GREEN);
+	DrawText(TextFormat("0%d:%d", (time / 60), time % 60), 3 * screenWidth / 8, screenHeight / 3, 2 * POLE, WHITE);
+
+	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 12, DARKGREEN);
 
 	EndDrawing();
 }

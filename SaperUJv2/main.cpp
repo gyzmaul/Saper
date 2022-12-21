@@ -13,6 +13,7 @@ int status = 1;
 //status = 3  game
 //status = 4  lost
 //status = 5  won
+//status = 6  bombscreen
 
 int main()
 {
@@ -45,12 +46,17 @@ int main()
 	int coX, coY;
 	Cell** grid = NULL;
 
-	Rectangle easyRec = { screenWidth / 4,       screenHeight / 6, screenWidth / 2, screenHeight / 6 };
-	Rectangle medRec  = { screenWidth / 4, 2.5 * screenHeight / 6, screenWidth / 2, screenHeight / 6 };
-	Rectangle hardRec = { screenWidth / 4, 4 *   screenHeight / 6, screenWidth / 2, screenHeight / 6 };
+	Rectangle easyRec = { screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
+	Rectangle medRec  = { screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
+	Rectangle hardRec = { screenWidth / 4,  10 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
+
+	Texture2D UJbomb;
+
+	//-GAME-----------------------------------------------------------------------------
 
 	while (gameIsRunning)
 	{
+
 		//-MENU-----------------------------------------------------------------------------
 
 		OpenWindow("Menu");
@@ -116,6 +122,8 @@ int main()
 
 		//-GAME-FIRST-MOVE-----------------------------------------------------------------
 
+		UJbomb = LoadTexture("UJ_400px.png");
+
 		while (status==2)
 		{
 			BeginDrawing();
@@ -127,7 +135,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status);
+					CellDraw(grid, i, j, status, UJbomb);
 				}
 			}
 
@@ -136,7 +144,7 @@ int main()
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				startX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
-				startY = (GetMouseY() - menuHeight - SPACE + 1) / (POLE + SPACE);
+				startY = (GetMouseY() - menuHeight - SPACE) / (POLE + SPACE);
 				status = 3;
 			}
 
@@ -170,7 +178,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status);
+					CellDraw(grid, i, j, status, UJbomb);
 				}
 			}
 
@@ -179,7 +187,7 @@ int main()
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
-				coY = (GetMouseY() - menuHeight - SPACE + 1) / (POLE + SPACE);
+				coY = (GetMouseY() - menuHeight - 2*SPACE) / (POLE + SPACE);
 
 				if (CheckIndex(coX, coY, sizeX, sizeY)) CellReveal(grid, coX, coY, sizeX, sizeY, &status, revealed);
 			}
@@ -187,9 +195,9 @@ int main()
 			if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
 			{
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
-				coY = (GetMouseY() - menuHeight - SPACE + 1) / (POLE + SPACE);
+				coY = (GetMouseY() - menuHeight - 2*SPACE) / (POLE + SPACE);
 				if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isFlag == false && grid[coX][coY].isRevealed == false) { grid[coX][coY].isFlag = true; flagsSet++; }
-				else if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isFlag == true && grid[coX][coY].isRevealed == false) { grid[coX][coY].isFlag = false; flagsSet++; }
+				else if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isFlag == true && grid[coX][coY].isRevealed == false) { grid[coX][coY].isFlag = false; flagsSet--; }
 			}
 
 			CheckWin(bombs, *revealed, &status);
@@ -207,6 +215,8 @@ int main()
 
 		
 		fnMemoryFree(sizeX, grid);
+
+		UnloadTexture(UJbomb);
 
 		if(status != 0) CloseWindow();
 
@@ -245,7 +255,7 @@ int main()
 
 		while (status==5)
 		{
-			DrawEndgameWin();
+			DrawEndgameWin((*timeStop - *timeStart) / CLOCKS_PER_SEC);
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
