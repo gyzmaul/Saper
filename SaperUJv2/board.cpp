@@ -100,7 +100,7 @@ void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, in
 		if(!grid[i][j].isRevealed)(*revealed)--;
 		grid[i][j].isRevealed = true;
 
-		if (grid[i][j].isBomb == 1) *status = 4;
+		if (grid[i][j].isBomb == 1) *status = 6;
 		else if (grid[i][j].bombsAround == 0)
 		{
 			for (int x = -1; x <= 1; x++)

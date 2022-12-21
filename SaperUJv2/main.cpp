@@ -11,9 +11,9 @@ int status = 1;
 //status = 1  menu
 //status = 2  loading
 //status = 3  game
-//status = 4  lost
+//status = 4  bombscreen
 //status = 5  won
-//status = 6  bombscreen
+//status = 6  lost
 
 int main()
 {
@@ -213,7 +213,26 @@ int main()
 
 		*timeStop = clock();
 
-		
+		//-BOMBSCREEN-----------------------------------------------------------------------
+
+		while (status == 4)
+		{
+			BeginDrawing();
+			ClearBackground(BLACK);
+
+			DrawTaskbar((bombs - flagsSet), (*timeTemp - *timeStart) / CLOCKS_PER_SEC);
+
+			for (int i = 0; i < sizeX; i++)
+			{
+				for (int j = 0; j < sizeY; j++)
+				{
+					CellDraw(grid, i, j, status, UJbomb);
+				}
+			}
+
+		}
+
+
 		fnMemoryFree(sizeX, grid);
 
 		UnloadTexture(UJbomb);
@@ -235,7 +254,7 @@ int main()
 			OpenWindow("Endgame");
 		}
 
-		while (status==4)
+		while (status==6)
 		{
 			DrawEndgameLose();
 
