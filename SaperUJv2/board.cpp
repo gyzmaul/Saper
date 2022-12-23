@@ -58,12 +58,12 @@ void sizeHard(int* x, int* y, int* b)
 
 }
 
-void CellDraw(Cell** grid, int i, int j, int status, Texture2D UJbomb)
+void CellDraw(Cell** grid, int i, int j, int status, Texture2D AGHFlag, Texture2D UJbomb)
 {
 	int x = MARGINES + i * (POLE + SPACE);
 	int y = MARGINES + j * (POLE + SPACE) + menuHeight;
 
-	if (grid[i][j].isBomb == 1 && status==4) DrawRectangle(x, y, POLE, POLE, RED);
+	if (grid[i][j].isBomb == 1 && status == 4 && grid[i][j].isFlag == 0) DrawTexture(UJbomb, x, y, WHITE);
 
 	else if (grid[i][j].isRevealed == true && grid[i][j].isFlag == false)
 	{
@@ -75,7 +75,7 @@ void CellDraw(Cell** grid, int i, int j, int status, Texture2D UJbomb)
 	if (grid[i][j].isFlag == true)
 	{
 		//DrawText(TextFormat("F"), x + 4, y+1, POLE, DARKGRAY);
-		DrawTexture(UJbomb, x, y, WHITE);
+		DrawTexture(AGHFlag, x, y, WHITE);
 	}
 }
 
@@ -100,7 +100,7 @@ void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, in
 		if(!grid[i][j].isRevealed)(*revealed)--;
 		grid[i][j].isRevealed = true;
 
-		if (grid[i][j].isBomb == 1) *status = 6;
+		if (grid[i][j].isBomb == 1) *status = 4;
 		else if (grid[i][j].bombsAround == 0)
 		{
 			for (int x = -1; x <= 1; x++)

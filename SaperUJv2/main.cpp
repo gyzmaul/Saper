@@ -50,6 +50,7 @@ int main()
 	Rectangle medRec  = { screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
 	Rectangle hardRec = { screenWidth / 4,  10 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
 
+	Texture2D AGHFlag;
 	Texture2D UJbomb;
 
 	//-GAME-----------------------------------------------------------------------------
@@ -122,6 +123,7 @@ int main()
 
 		//-GAME-FIRST-MOVE-----------------------------------------------------------------
 
+		AGHFlag = LoadTexture("AGH_400px.png");
 		UJbomb = LoadTexture("UJ_400px.png");
 
 		while (status==2)
@@ -135,7 +137,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status, UJbomb);
+					CellDraw(grid, i, j, status, AGHFlag, UJbomb);
 				}
 			}
 
@@ -178,7 +180,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status, UJbomb);
+					CellDraw(grid, i, j, status, AGHFlag, UJbomb);
 				}
 			}
 
@@ -200,7 +202,8 @@ int main()
 				else if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isFlag == true && grid[coX][coY].isRevealed == false) { grid[coX][coY].isFlag = false; flagsSet--; }
 			}
 
-			CheckWin(bombs, *revealed, &status);
+			if(status != 4) CheckWin(bombs, *revealed, &status);
+
 			*timeTemp = clock();
 
 			if (WindowShouldClose())
@@ -217,24 +220,29 @@ int main()
 
 		while (status == 4)
 		{
+			*timeTemp = clock();
+
 			BeginDrawing();
 			ClearBackground(BLACK);
 
-			DrawTaskbar((bombs - flagsSet), (*timeTemp - *timeStart) / CLOCKS_PER_SEC);
+			DrawTaskbar((bombs - flagsSet), (*timeStop - *timeStart) / CLOCKS_PER_SEC);
 
 			for (int i = 0; i < sizeX; i++)
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status, UJbomb);
+					CellDraw(grid, i, j, status, AGHFlag, UJbomb);
 				}
 			}
+			EndDrawing();
 
+			if ((*timeTemp - *timeStop) / CLOCKS_PER_SEC > 5) status = 6;
 		}
 
 
 		fnMemoryFree(sizeX, grid);
 
+		UnloadTexture(AGHFlag);
 		UnloadTexture(UJbomb);
 
 		if(status != 0) CloseWindow();
