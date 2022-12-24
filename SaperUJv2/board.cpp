@@ -72,6 +72,7 @@ void CellDraw(Cell** grid, int i, int j, int status, Texture2D AGHFlag, Texture2
 	}
 	else DrawRectangle(x, y, POLE, POLE, PINK);
 
+	if (grid[i][j].isBomb == 1 && status == 5) DrawTexture(AGHFlag, x, y, WHITE);
 	if (grid[i][j].isFlag == true)
 	{
 		//DrawText(TextFormat("F"), x + 4, y+1, POLE, DARKGRAY);

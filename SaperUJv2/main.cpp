@@ -11,9 +11,8 @@ int status = 1;
 //status = 1  menu
 //status = 2  loading
 //status = 3  game
-//status = 4  bombscreen
+//status = 4  lost
 //status = 5  won
-//status = 6  lost
 
 int main()
 {
@@ -221,12 +220,10 @@ int main()
 
 		*timeStop = clock();
 
-		//-BOMBSCREEN-----------------------------------------------------------------------
+		//-LOST-SCREEN----------------------------------------------------------------------
 
 		while (status == 4)
 		{
-			*timeTemp = clock();
-
 			BeginDrawing();
 			ClearBackground(BLACK);
 
@@ -244,70 +241,60 @@ int main()
 			EndDrawing();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) status = 1;
+
+			if (WindowShouldClose())
+			{
+				status = 0;
+				break;
+			}
 		}
 
+		//-WIN-SCREEN-----------------------------------------------------------------------
 
-		fnMemoryFree(sizeX, grid);
+
+		while (status == 5)
+		{
+			BeginDrawing();
+			ClearBackground(BLACK);
+
+			DrawTaskbar(0, (*timeStop - *timeStart) / CLOCKS_PER_SEC);
+
+			DrawText(TextFormat("Wygrales"), screenWidth / 2 - 72, screenHeight - menuHeight + 12, 1.5 * POLE, GREEN);
+
+			for (int i = 0; i < sizeX; i++)
+			{
+				for (int j = 0; j < sizeY; j++)
+				{
+					CellDraw(grid, i, j, status, AGHFlag, UJbomb);
+				}
+			}
+			EndDrawing();
+
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) status = 1;
+
+			if (WindowShouldClose())
+			{
+				status = 0;
+				break;
+			}
+		}
+
 
 		UnloadTexture(AGHFlag);
 		UnloadTexture(UJbomb);
 
-		if(status != 0) CloseWindow();
-
-		//window adjustment
-
-		sizeMed(&sizeX, &sizeY, &bombs);
-
-		menuHeight = 2 * POLE + SPACE;
-		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
-		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
-		
-		//-POST-GAME-LOST-------------------------------------------------------------------
-
-		if (status != 0)
-		{
-			OpenWindow("Endgame");
-		}
-
-		while (status==6)
-		{
-			DrawEndgameLose();
-
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-			{
-				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) status = 1;
-			}
-
-			if (WindowShouldClose())
-			{
-				status = 0;
-				break;
-			}
-		}
-		
-		//-POST-GAME-WON--------------------------------------------------------------------
-
-		while (status==5)
-		{
-			DrawEndgameWin((*timeStop - *timeStart) / CLOCKS_PER_SEC);
-
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-			{
-				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) status = 1;
-			}
-
-			if (WindowShouldClose())
-			{
-				status = 0;
-				break;
-			}
-		}
-
 		CloseWindow();
 
+		fnMemoryFree(sizeX, grid);
 		free(timeStart);
 		free(timeStop);
 		free(timeTemp);
+
+		sizeMed(&sizeX, &sizeY, &bombs);
+		menuHeight = 2 * POLE + SPACE;
+		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
+		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+
 		flagsSet = 0;
 		*revealed = sizeX*sizeY;
 
