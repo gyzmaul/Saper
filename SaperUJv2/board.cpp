@@ -70,7 +70,7 @@ void CellDraw(Cell** grid, int i, int j, int status, Texture2D AGHFlag, Texture2
 		if (grid[i][j].bombsAround == 0) DrawRectangle(x, y, POLE, POLE, BLACK);
 		else if (grid[i][j].bombsAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
 	}
-	else DrawRectangle(x, y, POLE, POLE, PINK);
+	else DrawRectangle(x, y, POLE, POLE, BLUE);
 
 	if (grid[i][j].isBomb == 1 && status == 5) DrawTexture(AGHFlag, x, y, WHITE);
 	if (grid[i][j].isFlag == true)
@@ -183,7 +183,7 @@ void OpenWindow(const char* caption)
 	SetTargetFPS(144);
 }
 
-void DrawMenu(Texture2D MSAGH)
+void DrawMenu(Texture2D MSAGH, int menu)
 {
 	BeginDrawing();
 
@@ -194,6 +194,11 @@ void DrawMenu(Texture2D MSAGH)
 	DrawRectangle(screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
 	DrawRectangle(screenWidth / 4,  10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12, DARKGRAY);
 	DrawRectangle(screenWidth - screenWidth / 2 + screenHeight / 48,  10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12, DARKGRAY);
+
+	if(menu==1)DrawRectangle(screenWidth / 4 + 2, 5.5 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
+	if(menu==2)DrawRectangle(screenWidth / 4 + 2,   7 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
+	if(menu==3)DrawRectangle(screenWidth / 4 + 2, 8.5 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
+
 	DrawText(TextFormat("easy")  , screenWidth / 4 + 38, 5.5 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
 	DrawText(TextFormat("medium"), screenWidth / 4 + 20,   7 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
 	DrawText(TextFormat("hard")  , screenWidth / 4 + 38, 8.5 * screenHeight / 12 + 5, screenHeight / 12 - 4, RED);

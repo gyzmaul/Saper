@@ -54,6 +54,8 @@ int main()
 	Texture2D UJbomb;
 	Texture2D MSbackground;
 
+	int menu = 0;
+
 	//-GAME-----------------------------------------------------------------------------
 
 	while (gameIsRunning)
@@ -67,7 +69,11 @@ int main()
 
 		while (status==1)
 		{
-			DrawMenu(MSbackground);
+			if (CheckCollisionPointRec(GetMousePosition(), easyRec)) menu = 1;
+			if (CheckCollisionPointRec(GetMousePosition(), medRec )) menu = 2;
+			if (CheckCollisionPointRec(GetMousePosition(), hardRec)) menu = 3;
+
+			DrawMenu(MSbackground, menu);
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
@@ -81,6 +87,8 @@ int main()
 				status = 0;
 				break;
 			}
+
+			menu = 0;
 		}
 
 		UnloadTexture(MSbackground);
