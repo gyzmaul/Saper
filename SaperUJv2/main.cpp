@@ -52,6 +52,19 @@ int main()
 
 	int menu = 0;
 
+	std::ifstream ranking;
+	ranking.open("ranking.txt");
+	int** nRanking=NULL;
+	nRanking = fnMemoryAllocInt(3, 3, nRanking);
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			ranking >> nRanking[i][j];
+		}
+	}
+	ranking.close();
+
 	//-GAME-----------------------------------------------------------------------------
 
 	while (gameIsRunning)
@@ -258,6 +271,10 @@ int main()
 
 		//-WIN-SCREEN-----------------------------------------------------------------------
 
+		if (status == 5)
+		{
+			updateRanks((*timeStop - *timeStart) / CLOCKS_PER_SEC, nRanking, mode);
+		}
 
 		while (status == 5)
 		{
@@ -308,6 +325,19 @@ int main()
 		if (status == 0) gameIsRunning = false;
 		else status = 1;
 	}
+
+	std::ofstream newRanking;
+	newRanking.open("ranking.txt");
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			newRanking << nRanking[i][j] << std::endl;
+		}
+	}
+	newRanking.close();
+	fnMemoryFreeInt(3, nRanking);
 
 	return 0;
 }

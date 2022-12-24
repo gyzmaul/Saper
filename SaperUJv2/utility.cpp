@@ -2,8 +2,7 @@
 #include "board.h"
 #include "raylib.h"
 #include <iostream>
-
-
+#include <fstream>
 
 Cell** fnMemoryAlloc(int nSizeX, int nSizeY, Cell** aTab)
 {
@@ -76,4 +75,55 @@ void CheckWin(int bombs, int revealed, int* status)
 {
 	if (revealed == bombs) *status = 5;
 }
+
+int** fnMemoryAllocInt(int nSizeX, int nSizeY, int** aTab)
+{
+	aTab = (int**)calloc(nSizeX, sizeof(int*));
+	if (aTab == NULL)
+	{
+		printf("MEMORY ERROR --code A1");
+		free(aTab);
+		system("pause");
+		exit(-1);
+	}
+
+	for (int i = 0; i < nSizeX; i++)
+	{
+		*(aTab + i) = (int*)calloc(nSizeY, sizeof(int));
+		if (*aTab == NULL)
+		{
+			printf("MEMORY ERROR --code B%d", i);
+			free(aTab);
+			system("pause");
+			exit(-1);
+		}
+	}
+
+	return aTab;
+}
+
+void fnMemoryFreeInt(int sizeX, int** aTab)
+{
+	for (int i = 0; i < sizeX; i++) free(aTab[i]);
+	free(aTab);
+}
+
+void updateRanks(int time, int** nRanking, int mode)
+{
+	if (time < nRanking[mode - 1][0]) {
+		nRanking[mode - 1][2] = nRanking[mode - 1][1];
+		nRanking[mode - 1][1] = nRanking[mode - 1][0];
+		nRanking[mode - 1][0] = time;
+	}
+
+	else if (time < nRanking[mode - 1][1]) {
+		nRanking[mode - 1][2] = nRanking[mode - 1][1];
+		nRanking[mode - 1][1] = time;
+	}
+
+	else if (time < nRanking[mode - 1][2]) {
+		nRanking[mode - 1][2] = time;
+	}
+}
+
 	
