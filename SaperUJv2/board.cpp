@@ -13,6 +13,9 @@ int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
 int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
+Texture2D AGHFlag, UJbomb, redX;
+Texture2D MSbackground, Ranks;
+
 void sizeEasy(int* x, int* y, int* b)
 {
 	sizeX = EASYX;
@@ -58,7 +61,7 @@ void sizeHard(int* x, int* y, int* b)
 
 }
 
-void CellDraw(Cell** grid, int i, int j, int status, Texture2D AGHFlag, Texture2D UJbomb)
+void CellDraw(Cell** grid, int i, int j, int status)
 {
 	int x = MARGINES + i * (POLE + SPACE);
 	int y = MARGINES + j * (POLE + SPACE) + menuHeight;
@@ -78,6 +81,7 @@ void CellDraw(Cell** grid, int i, int j, int status, Texture2D AGHFlag, Texture2
 		//DrawText(TextFormat("F"), x + 4, y+1, POLE, DARKGRAY);
 		DrawTexture(AGHFlag, x, y, WHITE);
 	}
+	if (grid[i][j].isBomb == 0 && status == 4 && grid[i][j].isFlag == 1) DrawTexture(redX, x, y, WHITE);
 }
 
 void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, int* revealed)
@@ -170,11 +174,11 @@ void DrawTaskbar(int bombsLeft, int time)
 	DrawRectangle(0, screenHeight - menuHeight, screenWidth, menuHeight, DARKGRAY);
 	//DrawRectangle(0, menuHeight - MARGINES, screenWidth, 2, DARKGRAY);
 	DrawRectangle(MARGINES, MARGINES+2, 4 * POLE + 3 * SPACE, 2 * POLE, BLACK);
-	DrawText(TextFormat("%d", bombsLeft), MARGINES + POLE / 2, MARGINES + 2 * SPACE +1, 2 * POLE, RED);
+	DrawText(TextFormat("%d", bombsLeft), MARGINES + POLE / 2 - 2, MARGINES + 2 * SPACE +1, 2 * POLE, RED);
 
 	DrawRectangle(screenWidth - MARGINES - (6 * POLE + 5 * SPACE), MARGINES + 2, 6 * POLE + 5 * SPACE, 2 * POLE, BLACK);
-	if((time%60)<10) DrawText(TextFormat("0%d:0%d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
-	else DrawText(TextFormat("0%d:%d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
+	if((time%60)<10) DrawText(TextFormat("0%d:0%d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2 + 4, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
+	else DrawText(TextFormat("0%d:%d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2 + 4, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
 }
 
 void OpenWindow(const char* caption)
@@ -183,12 +187,12 @@ void OpenWindow(const char* caption)
 	SetTargetFPS(144);
 }
 
-void DrawMenu(Texture2D MSAGH, int menu)
+void DrawMenu(int menu)
 {
 	BeginDrawing();
 
 	ClearBackground(BLACK);
-	DrawTexture(MSAGH, 0, 0, WHITE);
+	DrawTexture(MSbackground, 0, 0, WHITE);
 	DrawRectangle(screenWidth / 4, 5.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
 	DrawRectangle(screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
 	DrawRectangle(screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
@@ -199,9 +203,10 @@ void DrawMenu(Texture2D MSAGH, int menu)
 	if(menu==2)DrawRectangle(screenWidth / 4 + 2,   7 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
 	if(menu==3)DrawRectangle(screenWidth / 4 + 2, 8.5 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
 
-	DrawText(TextFormat("easy")  , screenWidth / 4 + 38, 5.5 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
-	DrawText(TextFormat("medium"), screenWidth / 4 + 20,   7 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
-	DrawText(TextFormat("hard")  , screenWidth / 4 + 38, 8.5 * screenHeight / 12 + 5, screenHeight / 12 - 4, RED);
+	DrawText(TextFormat("easy")  , screenWidth / 4 + 36, 5.5 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
+	DrawText(TextFormat("medium"), screenWidth / 4 + 18,   7 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
+	DrawText(TextFormat("hard")  , screenWidth / 4 + 36, 8.5 * screenHeight / 12 + 5, screenHeight / 12 - 4, RED);
+	DrawTexture(Ranks, screenWidth / 4, 10 * screenHeight / 12, WHITE);
 
 
 	EndDrawing();
@@ -229,4 +234,30 @@ void DrawEndgameWin(int time)
 	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 12, DARKGREEN);
 
 	EndDrawing();
+}
+
+void LoadTexturesGame()
+{
+	AGHFlag = LoadTexture("AGH_400px.png");
+	UJbomb = LoadTexture("UJ_400px.png");
+	redX = LoadTexture("redX.png");
+}
+
+void UnloadTexturesGame()
+{
+	UnloadTexture(AGHFlag);
+	UnloadTexture(UJbomb);
+	UnloadTexture(redX);
+}
+
+void LoadTexturesMenu()
+{
+	MSbackground = LoadTexture("msaghMED.png");
+	Ranks = LoadTexture("ranks.png");
+}
+
+void UnloadTexturesMenu()
+{
+	UnloadTexture(MSbackground);
+	UnloadTexture(Ranks);
 }

@@ -13,9 +13,9 @@
 #define MEDB 96
 #define HARDX 26
 #define HARDY 38
-#define HARDB 310
+#define HARDB 230
 
-void CellDraw(Cell** grid, int i, int j, int status, Texture2D AGHFlag, Texture2D UJbomb);
+void CellDraw(Cell** grid, int i, int j, int status);
 void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** aTab, int startX, int startY);
 void CellFillNumbers(int sizeX, int sizeY, Cell** grid);
 void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int*status, int* revealed);
@@ -24,6 +24,10 @@ void sizeEasy(int* x, int* y, int* b);
 void sizeMed(int* x, int* y, int* b);
 void sizeHard(int* x, int* y, int* b);
 void OpenWindow(const char* caption);
-void DrawMenu(Texture2D, int menu);
+void DrawMenu(int menu);
 void DrawEndgameWin(int time);
 void DrawEndgameLose();
+void LoadTexturesGame();
+void UnloadTexturesGame();
+void LoadTexturesMenu();
+void UnloadTexturesMenu();

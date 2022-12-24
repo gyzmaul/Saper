@@ -50,22 +50,17 @@ int main()
 	Rectangle medRec  = { screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
 	Rectangle hardRec = { screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
 
-	Texture2D AGHFlag;
-	Texture2D UJbomb;
-	Texture2D MSbackground;
-
 	int menu = 0;
 
 	//-GAME-----------------------------------------------------------------------------
 
 	while (gameIsRunning)
 	{
-
 		//-MENU-----------------------------------------------------------------------------
 
 		OpenWindow("Menu");
 
-		MSbackground = LoadTexture("msaghMED.png");
+		LoadTexturesMenu();
 
 		while (status==1)
 		{
@@ -73,7 +68,7 @@ int main()
 			if (CheckCollisionPointRec(GetMousePosition(), medRec )) menu = 2;
 			if (CheckCollisionPointRec(GetMousePosition(), hardRec)) menu = 3;
 
-			DrawMenu(MSbackground, menu);
+			DrawMenu(menu);
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
@@ -91,7 +86,7 @@ int main()
 			menu = 0;
 		}
 
-		UnloadTexture(MSbackground);
+		UnloadTexturesMenu();
 
 		if(status != 0) CloseWindow();
 
@@ -136,8 +131,7 @@ int main()
 
 		//-GAME-FIRST-MOVE-----------------------------------------------------------------
 
-		AGHFlag = LoadTexture("AGH_400px.png");
-		UJbomb = LoadTexture("UJ_400px.png");
+		LoadTexturesGame();
 
 		while (status==2)
 		{
@@ -150,7 +144,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status, AGHFlag, UJbomb);
+					CellDraw(grid, i, j, status);
 				}
 			}
 
@@ -193,7 +187,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status, AGHFlag, UJbomb);
+					CellDraw(grid, i, j, status);
 				}
 			}
 
@@ -211,8 +205,12 @@ int main()
 			{
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				coY = (GetMouseY() - menuHeight - 2*SPACE) / (POLE + SPACE);
-				if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isFlag == false && grid[coX][coY].isRevealed == false) { grid[coX][coY].isFlag = true; flagsSet++; }
-				else if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isFlag == true && grid[coX][coY].isRevealed == false) { grid[coX][coY].isFlag = false; flagsSet--; }
+
+				if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isRevealed == false)
+				{
+					if (grid[coX][coY].isFlag == false && bombs - flagsSet > 0) { grid[coX][coY].isFlag = true ; flagsSet++; }
+					else if (grid[coX][coY].isFlag == true ) { grid[coX][coY].isFlag = false; flagsSet--; }
+				}
 			}
 
 			if(status != 4) CheckWin(bombs, *revealed, &status);
@@ -244,7 +242,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status, AGHFlag, UJbomb);
+					CellDraw(grid, i, j, status);
 				}
 			}
 			EndDrawing();
@@ -274,7 +272,7 @@ int main()
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
-					CellDraw(grid, i, j, status, AGHFlag, UJbomb);
+					CellDraw(grid, i, j, status);
 				}
 			}
 			EndDrawing();
@@ -290,8 +288,7 @@ int main()
 
 		//-CLEAR-BOARD----------------------------------------------------------------------
 
-		UnloadTexture(AGHFlag);
-		UnloadTexture(UJbomb);
+		UnloadTexturesGame();
 
 		CloseWindow();
 
