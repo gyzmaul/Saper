@@ -31,7 +31,7 @@ int main()
 	int bombs = MEDB;
 
 	int menuHeight = 2 * POLE + SPACE;
-	int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+	int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 	int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 	int flagsSet = 0;
@@ -46,12 +46,13 @@ int main()
 	int coX, coY;
 	Cell** grid = NULL;
 
-	Rectangle easyRec = { screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
-	Rectangle medRec  = { screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
-	Rectangle hardRec = { screenWidth / 4,  10 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
+	Rectangle easyRec = { screenWidth / 4, 5.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
+	Rectangle medRec  = { screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
+	Rectangle hardRec = { screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
 
 	Texture2D AGHFlag;
 	Texture2D UJbomb;
+	Texture2D MSbackground;
 
 	//-GAME-----------------------------------------------------------------------------
 
@@ -62,9 +63,11 @@ int main()
 
 		OpenWindow("Menu");
 
+		MSbackground = LoadTexture("msaghMED.png");
+
 		while (status==1)
 		{
-			DrawMenu();
+			DrawMenu(MSbackground);
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
@@ -79,6 +82,8 @@ int main()
 				break;
 			}
 		}
+
+		UnloadTexture(MSbackground);
 
 		if(status != 0) CloseWindow();
 
@@ -96,7 +101,7 @@ int main()
 		}
 
 		menuHeight = 2 * POLE + SPACE;
-		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 		*revealed = sizeX * sizeY;
@@ -227,6 +232,8 @@ int main()
 
 			DrawTaskbar((bombs - flagsSet), (*timeStop - *timeStart) / CLOCKS_PER_SEC);
 
+			DrawText(TextFormat("Przegrales"), screenWidth / 2 - 86, screenHeight - menuHeight + 12, 1.5 * POLE, RED);
+
 			for (int i = 0; i < sizeX; i++)
 			{
 				for (int j = 0; j < sizeY; j++)
@@ -236,7 +243,7 @@ int main()
 			}
 			EndDrawing();
 
-			if ((*timeTemp - *timeStop) / CLOCKS_PER_SEC > 5) status = 6;
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) status = 1;
 		}
 
 
@@ -252,7 +259,7 @@ int main()
 		sizeMed(&sizeX, &sizeY, &bombs);
 
 		menuHeight = 2 * POLE + SPACE;
-		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 		
 		//-POST-GAME-LOST-------------------------------------------------------------------

@@ -10,7 +10,7 @@ int sizeX = MEDX;
 int sizeY = MEDY;
 
 int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
-int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 void sizeEasy(int* x, int* y, int* b)
@@ -23,7 +23,7 @@ void sizeEasy(int* x, int* y, int* b)
 	*b = EASYB;
 
 	menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
-	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 	screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 }
@@ -38,7 +38,7 @@ void sizeMed(int* x, int* y, int* b)
 	*b = MEDB;
 
 	menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
-	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 	screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 }
@@ -53,7 +53,7 @@ void sizeHard(int* x, int* y, int* b)
 	*b = HARDB;
 
 	menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
-	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + menuHeight;
+	screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 	screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 }
@@ -166,6 +166,7 @@ void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int start
 void DrawTaskbar(int bombsLeft, int time)
 {
 	DrawRectangle(0, 0, screenWidth, menuHeight, DARKGRAY);
+	DrawRectangle(0, screenHeight - menuHeight, screenWidth, menuHeight, DARKGRAY);
 	//DrawRectangle(0, menuHeight - MARGINES, screenWidth, 2, DARKGRAY);
 	DrawRectangle(MARGINES, MARGINES+2, 4 * POLE + 3 * SPACE, 2 * POLE, BLACK);
 	DrawText(TextFormat("%d", bombsLeft), MARGINES + POLE / 2, MARGINES + 2 * SPACE +1, 2 * POLE, RED);
@@ -181,17 +182,20 @@ void OpenWindow(const char* caption)
 	SetTargetFPS(144);
 }
 
-void DrawMenu()
+void DrawMenu(Texture2D MSAGH)
 {
 	BeginDrawing();
 
 	ClearBackground(BLACK);
-	DrawRectangle(screenWidth / 4,  7 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
-	DrawRectangle(screenWidth / 4,  8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
-	DrawRectangle(screenWidth / 4, 10 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
-	DrawText(TextFormat("easy")  , screenWidth / 4 + 38,   7 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
-	DrawText(TextFormat("medium"), screenWidth / 4 + 20, 8.5 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
-	DrawText(TextFormat("hard")  , screenWidth / 4 + 38,  10 * screenHeight / 12 + 5, screenHeight / 12 - 4, RED);
+	DrawTexture(MSAGH, 0, 0, WHITE);
+	DrawRectangle(screenWidth / 4, 5.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
+	DrawRectangle(screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
+	DrawRectangle(screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
+	DrawRectangle(screenWidth / 4,  10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12, DARKGRAY);
+	DrawRectangle(screenWidth - screenWidth / 2 + screenHeight / 48,  10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12, DARKGRAY);
+	DrawText(TextFormat("easy")  , screenWidth / 4 + 38, 5.5 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
+	DrawText(TextFormat("medium"), screenWidth / 4 + 20,   7 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
+	DrawText(TextFormat("hard")  , screenWidth / 4 + 38, 8.5 * screenHeight / 12 + 5, screenHeight / 12 - 4, RED);
 
 
 	EndDrawing();

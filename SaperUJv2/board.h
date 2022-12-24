@@ -24,6 +24,6 @@ void sizeEasy(int* x, int* y, int* b);
 void sizeMed(int* x, int* y, int* b);
 void sizeHard(int* x, int* y, int* b);
 void OpenWindow(const char* caption);
-void DrawMenu();
+void DrawMenu(Texture2D);
 void DrawEndgameWin(int time);
 void DrawEndgameLose();
