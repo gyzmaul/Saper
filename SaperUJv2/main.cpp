@@ -2,6 +2,7 @@
 #include "utility.h"
 #include "board.h"
 #include <iostream>
+#include <fstream>
 #include <time.h>
 #include <string>
 
@@ -240,7 +241,7 @@ int main()
 			}
 			EndDrawing();
 
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) status = 1;
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) status = 1;
 
 			if (WindowShouldClose())
 			{
@@ -270,7 +271,7 @@ int main()
 			}
 			EndDrawing();
 
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) status = 1;
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) status = 1;
 
 			if (WindowShouldClose())
 			{
@@ -279,6 +280,7 @@ int main()
 			}
 		}
 
+		//-CLEAR-BOARD----------------------------------------------------------------------
 
 		UnloadTexture(AGHFlag);
 		UnloadTexture(UJbomb);
