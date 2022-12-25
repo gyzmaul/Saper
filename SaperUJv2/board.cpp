@@ -16,6 +16,9 @@ int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 Texture2D AGHFlag, UJbomb, redX;
 Texture2D MSbackground, Ranks;
 
+Font font = { 0 };
+
+
 void sizeEasy(int* x, int* y, int* b)
 {
 	sizeX = EASYX;
@@ -73,7 +76,7 @@ void CellDraw(Cell** grid, int i, int j, int status)
 		if (grid[i][j].bombsAround == 0) DrawRectangle(x, y, POLE, POLE, BLACK);
 		else if (grid[i][j].bombsAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
 	}
-	else DrawRectangle(x, y, POLE, POLE, BLUE);
+	else DrawRectangle(x, y, POLE, POLE, GRAY);
 
 	if (grid[i][j].isBomb == 1 && status == 5) DrawTexture(AGHFlag, x, y, WHITE);
 	if (grid[i][j].isFlag == true)
@@ -203,7 +206,8 @@ void DrawMenu(int menu)
 	if(menu==3)DrawRectangle(screenWidth / 4 + 2, 8.5 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
 	if(menu==4)DrawRectangle(screenWidth / 4 + 2,  10 * screenHeight / 12 + 2, screenWidth / 4 - screenHeight / 48 - 4, screenHeight / 12 - 4, GRAY);
 
-	DrawText(TextFormat("easy")  , screenWidth / 4 + 36, 5.5 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
+	//DrawText(TextFormat("easy")  , screenWidth / 4 + 36, 5.5 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
+	DrawTextEx(font, "easy", { (float)(screenWidth / 4 + 36), (float)(5.5 * screenHeight / 12) }, screenHeight / 12 - 4, 4, GREEN);
 	DrawText(TextFormat("medium"), screenWidth / 4 + 18,   7 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
 	DrawText(TextFormat("hard")  , screenWidth / 4 + 36, 8.5 * screenHeight / 12 + 5, screenHeight / 12 - 4, RED);
 	DrawTexture(Ranks, screenWidth / 4, 10 * screenHeight / 12, WHITE);
@@ -293,4 +297,23 @@ void DrawRanking(int** nRanking)
 	DrawText(TextFormat("hard")  , screenWidth / 8 + 18, 7 * screenHeight / 12    , screenHeight / 12 - 4, RED   );
 
 	EndDrawing();
+}
+
+void LoadFonts()
+{
+	//font = LoadFont("resources/fonts/alagard.png");
+	//font = LoadFont("resources/fonts/pixelplay.png");
+	//font = LoadFont("resources/fonts/mecha.png");
+	//font = LoadFont("resources/fonts/setback.png");
+	//font = LoadFont("resources/fonts/romulus.png");
+	//font = LoadFont("resources/fonts/pixantiqua.fnt");
+	font = LoadFontEx("upheavtt.ttf", 20, NULL, 0);
+	//font = LoadFont("resources/fonts/alpha_beta.png");
+	//font = LoadFont("resources/fonts/jupiter_crash.png");
+}
+
+void UnloadFonts()
+{
+	//for (int i = 0; i < 8; i++) 
+	UnloadFont(font);
 }

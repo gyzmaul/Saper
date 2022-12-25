@@ -32,3 +32,5 @@ void LoadTexturesGame();
 void LoadTexturesMenu();
 void UnloadTexturesGame();
 void UnloadTexturesMenu();
+void LoadFonts();
+void UnloadFonts();

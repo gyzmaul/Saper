@@ -76,6 +76,7 @@ int main()
 		OpenWindow("Menu");
 
 		LoadTexturesMenu();
+		LoadFonts();
 
 		while (status==1 || status == 6)
 		{
@@ -122,6 +123,7 @@ int main()
 		}
 
 		UnloadTexturesMenu();
+		UnloadFonts();
 
 		if(status != 0) CloseWindow();
 
