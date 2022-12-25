@@ -177,8 +177,7 @@ void DrawTaskbar(int bombsLeft, int time)
 	DrawText(TextFormat("%d", bombsLeft), MARGINES + POLE / 2 - 2, MARGINES + 2 * SPACE +1, 2 * POLE, RED);
 
 	DrawRectangle(screenWidth - MARGINES - (6 * POLE + 5 * SPACE), MARGINES + 2, 6 * POLE + 5 * SPACE, 2 * POLE, BLACK);
-	if((time%60)<10) DrawText(TextFormat("0%d:0%d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2 + 4, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
-	else DrawText(TextFormat("0%d:%d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2 + 4, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
+	DrawText(TextFormat("%02d:%02d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2 + 4, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
 }
 
 void OpenWindow(const char* caption)
@@ -202,6 +201,7 @@ void DrawMenu(int menu)
 	if(menu==1)DrawRectangle(screenWidth / 4 + 2, 5.5 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
 	if(menu==2)DrawRectangle(screenWidth / 4 + 2,   7 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
 	if(menu==3)DrawRectangle(screenWidth / 4 + 2, 8.5 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
+	if(menu==4)DrawRectangle(screenWidth / 4 + 2,  10 * screenHeight / 12 + 2, screenWidth / 4 - screenHeight / 48 - 4, screenHeight / 12 - 4, GRAY);
 
 	DrawText(TextFormat("easy")  , screenWidth / 4 + 36, 5.5 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
 	DrawText(TextFormat("medium"), screenWidth / 4 + 18,   7 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
@@ -212,7 +212,7 @@ void DrawMenu(int menu)
 	EndDrawing();
 }
 
-void DrawEndgameLose()
+/*void DrawEndgameLose()
 {
 	BeginDrawing();
 
@@ -234,13 +234,13 @@ void DrawEndgameWin(int time)
 	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 12, DARKGREEN);
 
 	EndDrawing();
-}
+}*/
 
 void LoadTexturesGame()
 {
-	AGHFlag = LoadTexture("AGH_400px.png");
-	UJbomb = LoadTexture("UJ_400px.png");
-	redX = LoadTexture("redX.png");
+	AGHFlag = LoadTexture("textures/AGH_400px.png");
+	UJbomb = LoadTexture("textures/UJ_400px.png");
+	redX = LoadTexture("textures/redX.png");
 }
 
 void UnloadTexturesGame()
@@ -252,12 +252,45 @@ void UnloadTexturesGame()
 
 void LoadTexturesMenu()
 {
-	MSbackground = LoadTexture("msaghMED.png");
-	Ranks = LoadTexture("ranks.png");
+	MSbackground = LoadTexture("textures/msaghMED.png");
+	Ranks = LoadTexture("textures/ranks.png");
 }
 
 void UnloadTexturesMenu()
 {
 	UnloadTexture(MSbackground);
 	UnloadTexture(Ranks);
+}
+
+void DrawRanking(int** nRanking)
+{
+	BeginDrawing();
+
+	ClearBackground(BLACK);
+	DrawTexture(MSbackground, 0, 0, WHITE);
+	DrawRectangle(screenWidth / 4, 10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12, DARKGRAY);
+	DrawRectangle(screenWidth / 4 + 2, 10 * screenHeight / 12 + 2, screenWidth / 4 - screenHeight / 48 - 4, screenHeight / 12 - 4, GRAY);
+	DrawTexture(Ranks, screenWidth / 4, 10 * screenHeight / 12, WHITE);
+
+	DrawRectangle(3 * screenWidth / 5,     screenHeight / 12 - 4, 100, 3 * screenHeight / 12 - 12, BLACK);
+	DrawRectangle(3 * screenWidth / 5, 4 * screenHeight / 12 - 4, 100, 3 * screenHeight / 12 - 12, BLACK);
+	DrawRectangle(3 * screenWidth / 5, 7 * screenHeight / 12 - 4, 100, 3 * screenHeight / 12 - 12, BLACK);
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			DrawText(TextFormat("%02d:%02d", nRanking[i][j] / 60, nRanking[i][j] % 60), 3 * screenWidth / 5 + 10, (i*3+j+1) * screenHeight / 12, screenHeight / 18, WHITE);
+		}
+	}
+
+	DrawRectangle(screenWidth / 10,     screenHeight / 12 - 4, screenWidth / 2 - 16, screenHeight / 12, BLACK);
+	DrawRectangle(screenWidth / 10, 4 * screenHeight / 12 - 4, screenWidth / 2 - 16, screenHeight / 12, BLACK);
+	DrawRectangle(screenWidth / 10, 7 * screenHeight / 12 - 4, screenWidth / 2 - 16, screenHeight / 12, BLACK);
+
+	DrawText(TextFormat("easy")  , screenWidth / 8 + 18,     screenHeight / 12 - 6, screenHeight / 12 - 4, GREEN );
+	DrawText(TextFormat("medium"), screenWidth / 8 + 2 , 4 * screenHeight / 12 - 2, screenHeight / 12 - 4, YELLOW);
+	DrawText(TextFormat("hard")  , screenWidth / 8 + 18, 7 * screenHeight / 12    , screenHeight / 12 - 4, RED   );
+
+	EndDrawing();
 }

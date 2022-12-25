@@ -14,6 +14,7 @@ int status = 1;
 //status = 3  game
 //status = 4  lost
 //status = 5  won
+//status = 6  ranking
 
 int main()
 {
@@ -49,6 +50,7 @@ int main()
 	Rectangle easyRec = { screenWidth / 4, 5.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
 	Rectangle medRec  = { screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
 	Rectangle hardRec = { screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
+	Rectangle rankRec = { screenWidth / 4,  10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12 };
 
 	int menu = 0;
 
@@ -75,28 +77,48 @@ int main()
 
 		LoadTexturesMenu();
 
-		while (status==1)
+		while (status==1 || status == 6)
 		{
-			if (CheckCollisionPointRec(GetMousePosition(), easyRec)) menu = 1;
-			if (CheckCollisionPointRec(GetMousePosition(), medRec )) menu = 2;
-			if (CheckCollisionPointRec(GetMousePosition(), hardRec)) menu = 3;
-
-			DrawMenu(menu);
-
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			while (status == 1)
 			{
-				if (CheckCollisionPointRec(GetMousePosition(), easyRec)) { status = 2; mode = 1; }
-				if (CheckCollisionPointRec(GetMousePosition(), medRec )) { status = 2; mode = 2; }
-				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) { status = 2; mode = 3; }
+				if (CheckCollisionPointRec(GetMousePosition(), easyRec)) menu = 1;
+				if (CheckCollisionPointRec(GetMousePosition(), medRec )) menu = 2;
+				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) menu = 3;
+				if (CheckCollisionPointRec(GetMousePosition(), rankRec)) menu = 4;
+
+				DrawMenu(menu);
+				menu = 0;
+
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					if (CheckCollisionPointRec(GetMousePosition(), easyRec)) { status = 2; mode = 1; }
+					if (CheckCollisionPointRec(GetMousePosition(), medRec )) { status = 2; mode = 2; }
+					if (CheckCollisionPointRec(GetMousePosition(), hardRec)) { status = 2; mode = 3; }
+					if (CheckCollisionPointRec(GetMousePosition(), rankRec)) { status = 6; }
+				}
+
+				if (WindowShouldClose())
+				{
+					status = 0;
+					break;
+				}
 			}
 
-			if (WindowShouldClose())
+			while (status == 6)
 			{
-				status = 0;
-				break;
-			}
+				DrawRanking(nRanking);
 
-			menu = 0;
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					if (CheckCollisionPointRec(GetMousePosition(), rankRec)) { status = 1; }
+				}
+
+				if (WindowShouldClose())
+				{
+					status = 0;
+					break;
+				}
+			}
 		}
 
 		UnloadTexturesMenu();

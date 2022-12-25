@@ -117,16 +117,14 @@ void updateRanks(int time, int** nRanking, int mode)
 		nRanking[mode - 1][0] = time;
 	}
 
-	else if (time < nRanking[mode - 1][1] || nRanking[mode - 1][0] == 0)
+	else if (time < nRanking[mode - 1][1] || nRanking[mode - 1][1] == 0)
 	{
 		nRanking[mode - 1][2] = nRanking[mode - 1][1];
 		nRanking[mode - 1][1] = time;
 	}
 
-	else if (time < nRanking[mode - 1][2] || nRanking[mode - 1][0] == 0)
+	else if (time < nRanking[mode - 1][2] || nRanking[mode - 1][2] == 0)
 	{
 		nRanking[mode - 1][2] = time;
 	}
 }
-
-	
