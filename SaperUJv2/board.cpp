@@ -29,6 +29,12 @@ Color colorList[COLORS] = { GRAY , DARKGRAY , YELLOW , GOLD , ORANGE , GREEN , L
 const char* colorNames[COLORS] = { "GRAY" , "DARKGRAY" , "YELLOW" , "GOLD" , "ORANGE" , "GREEN" , "LIME" , "DARKGREEN" , "SKYBLUE" , "BLUE" , "DARKBLUE" , "PINK" , "PURPLE" , "VIOLET" , "DARKPURPLE" , "BEIGE" , "BROWN" , "RAYWHITE" };
 Rectangle colorsRec[COLORS];
 
+void OpenWindow(const char* caption)
+{
+	InitWindow(screenWidth, screenHeight, caption);
+	SetTargetFPS(144);
+}
+
 void sizeEasy(int* x, int* y, int* b)
 {
 	sizeX = EASYX;
@@ -193,12 +199,6 @@ void DrawTaskbar(int bombsLeft, int time)
 	DrawText(TextFormat("%02d:%02d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2 + 4, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
 }
 
-void OpenWindow(const char* caption)
-{
-	InitWindow(screenWidth, screenHeight, caption);
-	SetTargetFPS(144);
-}
-
 void DrawMenu(int menu)
 {
 	BeginDrawing();
@@ -217,8 +217,65 @@ void DrawMenu(int menu)
 	DrawTextEx(font, "hard"  , { (float)(screenWidth / 6), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, RED);
 	DrawTexture(Ranks, screenWidth / 6 - 4, 9.6 * screenHeight / 12, WHITE);
 	DrawTexture(Cog  , screenWidth / 2 - 36, 9.6 * screenHeight / 12 - 4, WHITE);
-	DrawTexture(Biwo  , 3 * screenWidth / 4 - 30, 9.6 * screenHeight / 12 - 4, WHITE);
+	//DrawTexture(Biwo  , 3 * screenWidth / 4 - 30, 9.6 * screenHeight / 12 - 4, WHITE);
 
+
+	EndDrawing();
+}
+
+void DrawRanking(int** nRanking)
+{
+	BeginDrawing();
+
+	ClearBackground(BLACK);
+	DrawTexture(rankBackground, 0, 0, WHITE);
+
+	if (CheckCollisionPointRec(GetMousePosition(), backRec)) DrawTexture(arrow2, 30, 10, WHITE);
+	else DrawTexture(arrow1, 30, 10, WHITE);
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (nRanking[i][0] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][0] / 60, nRanking[i][0] % 60), { (float) 2 * screenWidth / 5 - 4 , (float) ((i + 1) * 3.6 * screenHeight / 12 - 56)}, screenHeight / 24, 0, WHITE);
+		if (nRanking[i][1] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][1] / 60, nRanking[i][1] % 60), { (float) 1 * screenWidth / 5 - 24, (float) ((i + 1) * 3.6 * screenHeight / 12 - 24)}, screenHeight / 24, 0, WHITE);
+		if (nRanking[i][2] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][2] / 60, nRanking[i][2] % 60), { (float) 3 * screenWidth / 5 + 16, (float) ((i + 1) * 3.6 * screenHeight / 12 )}, screenHeight / 24, 0, WHITE);
+	}
+
+	EndDrawing();
+}
+
+void DrawSettings(int cellColor)
+{
+	BeginDrawing();
+
+	ClearBackground(BLACK);
+	DrawTexture(settingsBackground, 0, 0, WHITE);
+
+	if (CheckCollisionPointRec(GetMousePosition(), backRec)) DrawTexture(arrow2, 30, 10, WHITE);
+	else DrawTexture(arrow1, 30, 10, WHITE);
+
+	for (int i = 0; i < COLORS; i++)
+	{
+		DrawRectangle(56, 86 + i * 28, 64, 24, colorList[i]);
+		if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) DrawTextEx(font, colorNames[i], { (float)(136), (float)(88 + i * 28) }, 22, 1, colorList[i]);
+		else DrawTextEx(font, colorNames[i], {(float)(136), (float)(88 + i * 28)}, 22, 1, WHITE);
+	}
+
+	DrawTextEx(font, ">", {(float)(42), (float)(88 + cellColor * 28)}, 22, 1, WHITE);
+
+	/*if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+	{
+		for (int i = 0; i < COLORS; i++)
+		{
+			if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) *changeFlag = 1;;
+		}
+
+		if (CheckCollisionPointRec(GetMousePosition(), backRec)) changeFlag = 0;
+	}
+
+	if ((*changeFlag) == 1)
+	{
+		DrawTextEx(font, "color changed", {(float)(136), (float)(30)}, 22, 1, WHITE);
+	}*/
 
 	EndDrawing();
 }
@@ -261,26 +318,6 @@ void UnloadTexturesMenu()
 	UnloadTexture(arrow2);
 }
 
-void DrawRanking(int** nRanking)
-{
-	BeginDrawing();
-
-	ClearBackground(BLACK);
-	DrawTexture(rankBackground, 0, 0, WHITE);
-
-	if (CheckCollisionPointRec(GetMousePosition(), backRec)) DrawTexture(arrow2, 30, 10, WHITE);
-	else DrawTexture(arrow1, 30, 10, WHITE);
-
-	for (int i = 0; i < 3; i++)
-	{
-		if (nRanking[i][0] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][0] / 60, nRanking[i][0] % 60), { (float) 2 * screenWidth / 5 - 4 , (float) ((i + 1) * 3.6 * screenHeight / 12 - 56)}, screenHeight / 24, 0, WHITE);
-		if (nRanking[i][1] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][1] / 60, nRanking[i][1] % 60), { (float) 1 * screenWidth / 5 - 24, (float) ((i + 1) * 3.6 * screenHeight / 12 - 24)}, screenHeight / 24, 0, WHITE);
-		if (nRanking[i][2] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][2] / 60, nRanking[i][2] % 60), { (float) 3 * screenWidth / 5 + 16, (float) ((i + 1) * 3.6 * screenHeight / 12 )}, screenHeight / 24, 0, WHITE);
-	}
-
-	EndDrawing();
-}
-
 void LoadFonts()
 {
 	font = LoadFontEx("files/Azonix.otf", 100, NULL, 0);
@@ -289,43 +326,6 @@ void LoadFonts()
 void UnloadFonts()
 {
 	UnloadFont(font);
-}
-
-void DrawSettings(int cellColor)
-{
-	BeginDrawing();
-
-	ClearBackground(BLACK);
-	DrawTexture(settingsBackground, 0, 0, WHITE);
-
-	if (CheckCollisionPointRec(GetMousePosition(), backRec)) DrawTexture(arrow2, 30, 10, WHITE);
-	else DrawTexture(arrow1, 30, 10, WHITE);
-
-	for (int i = 0; i < COLORS; i++)
-	{
-		DrawRectangle(56, 86 + i * 28, 64, 24, colorList[i]);
-		if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) DrawTextEx(font, colorNames[i], { (float)(136), (float)(88 + i * 28) }, 22, 1, colorList[i]);
-		else DrawTextEx(font, colorNames[i], {(float)(136), (float)(88 + i * 28)}, 22, 1, WHITE);
-	}
-
-	DrawTextEx(font, ">", {(float)(42), (float)(88 + cellColor * 28)}, 22, 1, WHITE);
-
-	/*if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
-	{
-		for (int i = 0; i < COLORS; i++)
-		{
-			if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) *changeFlag = 1;;
-		}
-
-		if (CheckCollisionPointRec(GetMousePosition(), backRec)) changeFlag = 0;
-	}
-
-	if ((*changeFlag) == 1)
-	{
-		DrawTextEx(font, "color changed", {(float)(136), (float)(30)}, 22, 1, WHITE);
-	}*/
-
-	EndDrawing();
 }
 
 void changeColor(int* cellColor)
@@ -348,11 +348,3 @@ void setColors(int cellColor)
 		colorsRec[i] = { 56, (float) 86 + i * 28, (float)(2 * screenWidth / 3 + 18), 24 };
 	}
 }
-
-/*void getColor(int* cellColor)
-{
-	for (int i = 0; i < COLORS; i++)
-	{
-		if (kolor == colorList[i]) *cellColor = i;
-	}
-}*/

@@ -223,7 +223,7 @@ int main()
 			{
 				startX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				startY = (GetMouseY() - menuHeight - SPACE) / (POLE + SPACE);
-				status = 3;
+				if (GetMouseY() - menuHeight - SPACE > 0)status = 3;
 			}
 
 			if (WindowShouldClose())
@@ -267,7 +267,10 @@ int main()
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				coY = (GetMouseY() - menuHeight - 2*SPACE) / (POLE + SPACE);
 
-				if (CheckIndex(coX, coY, sizeX, sizeY)) CellReveal(grid, coX, coY, sizeX, sizeY, &status, revealed);
+				if (GetMouseY() - menuHeight - SPACE > 0)
+				{
+					if (CheckIndex(coX, coY, sizeX, sizeY)) CellReveal(grid, coX, coY, sizeX, sizeY, &status, revealed);
+				}
 			}
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
@@ -275,10 +278,13 @@ int main()
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				coY = (GetMouseY() - menuHeight - 2*SPACE) / (POLE + SPACE);
 
-				if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isRevealed == false)
+				if (GetMouseY() - menuHeight - SPACE > 0)
 				{
-					if (grid[coX][coY].isFlag == false && bombs - flagsSet > 0) { grid[coX][coY].isFlag = true ; flagsSet++; }
-					else if (grid[coX][coY].isFlag == true ) { grid[coX][coY].isFlag = false; flagsSet--; }
+					if (CheckIndex(coX, coY, sizeX, sizeY) && grid[coX][coY].isRevealed == false)
+					{
+						if (grid[coX][coY].isFlag == false && bombs - flagsSet > 0) { grid[coX][coY].isFlag = true; flagsSet++; }
+						else if (grid[coX][coY].isFlag == true) { grid[coX][coY].isFlag = false; flagsSet--; }
+					}
 				}
 			}
 
