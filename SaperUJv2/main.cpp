@@ -22,6 +22,7 @@ int main()
 
 	bool gameIsRunning = 1;
 
+	int menu = 0;
 	int mode = 0;
 	//mode = 1 easy
 	//mode = 2 med
@@ -51,8 +52,9 @@ int main()
 	Rectangle medRec  = { screenWidth / 6    , 7.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
 	Rectangle hardRec = { screenWidth / 6    , 8.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
 	Rectangle rankRec = { screenWidth / 6 - 4, 9.6 * screenHeight / 12, 76, 54 };
+	Rectangle backRec = { 30, 10, 76, 54 };
 
-	int menu = 0;
+	//-file-read------------------------------------------------------------------------
 
 	std::ifstream ranking;
 	ranking.open("ranking.txt");
@@ -107,11 +109,13 @@ int main()
 
 			while (status == 6)
 			{
+				if (CheckCollisionPointRec(GetMousePosition(), easyRec));
+				
 				DrawRanking(nRanking);
 
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
-					if (CheckCollisionPointRec(GetMousePosition(), rankRec)) { status = 1; }
+					if (CheckCollisionPointRec(GetMousePosition(), backRec)) { status = 1; }
 				}
 
 				if (WindowShouldClose())

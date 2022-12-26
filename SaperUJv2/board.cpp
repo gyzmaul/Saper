@@ -14,7 +14,7 @@ int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuH
 int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 Texture2D AGHFlag, UJbomb, redX;
-Texture2D MSbackground, Ranks, Cog, Biwo;
+Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, arrow1, arrow2;
 
 Font font = { 0 };
 
@@ -193,7 +193,7 @@ void DrawMenu(int menu)
 	BeginDrawing();
 
 	ClearBackground(BLACK);
-	DrawTexture(MSbackground, 0, 0, WHITE);
+	DrawTexture(menuBackground, 0, 0, WHITE);
 
 	if(menu==1) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(6.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==2) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
@@ -227,18 +227,24 @@ void UnloadTexturesGame()
 
 void LoadTexturesMenu()
 {
-	MSbackground = LoadTexture("textures/msaghMED.png");
+	menuBackground = LoadTexture("textures/msaghMED.png");
 	Ranks = LoadTexture("textures/ranks.png");
 	Cog = LoadTexture("textures/cog.png");
 	Biwo = LoadTexture("textures/biwo.png");
+	rankBackground = LoadTexture("textures/msaghMEDranking2.png");
+	arrow1 = LoadTexture("textures/arrow1.png");
+	arrow2 = LoadTexture("textures/arrow2.png");
 }
 
 void UnloadTexturesMenu()
 {
-	UnloadTexture(MSbackground);
+	UnloadTexture(menuBackground);
 	UnloadTexture(Ranks);
 	UnloadTexture(Cog);
 	UnloadTexture(Biwo);
+	UnloadTexture(rankBackground);
+	UnloadTexture(arrow1);
+	UnloadTexture(arrow2);
 }
 
 void DrawRanking(int** nRanking)
@@ -246,30 +252,15 @@ void DrawRanking(int** nRanking)
 	BeginDrawing();
 
 	ClearBackground(BLACK);
-	DrawTexture(MSbackground, 0, 0, WHITE);
-	DrawRectangle(screenWidth / 4, 10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12, DARKGRAY);
-	DrawRectangle(screenWidth / 4 + 2, 10 * screenHeight / 12 + 2, screenWidth / 4 - screenHeight / 48 - 4, screenHeight / 12 - 4, GRAY);
-	DrawTexture(Ranks, screenWidth / 4, 10 * screenHeight / 12, WHITE);
-
-	DrawRectangle(3 * screenWidth / 5,     screenHeight / 12 - 4, 100, 3 * screenHeight / 12 - 12, BLACK);
-	DrawRectangle(3 * screenWidth / 5, 4 * screenHeight / 12 - 4, 100, 3 * screenHeight / 12 - 12, BLACK);
-	DrawRectangle(3 * screenWidth / 5, 7 * screenHeight / 12 - 4, 100, 3 * screenHeight / 12 - 12, BLACK);
+	DrawTexture(rankBackground, 0, 0, WHITE);
+	DrawTexture(arrow1, 30, 10, WHITE);
 
 	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < 3; j++)
-		{
-			DrawText(TextFormat("%02d:%02d", nRanking[i][j] / 60, nRanking[i][j] % 60), 3 * screenWidth / 5 + 10, (i*3+j+1) * screenHeight / 12, screenHeight / 18, WHITE);
-		}
+		if (nRanking[i][0] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][0] / 60, nRanking[i][0] % 60), { (float) 2 * screenWidth / 5 - 4 , (float) ((i + 1) * 3.6 * screenHeight / 12 - 56)}, screenHeight / 24, 0, WHITE);
+		if (nRanking[i][1] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][1] / 60, nRanking[i][1] % 60), { (float) 1 * screenWidth / 5 - 24, (float) ((i + 1) * 3.6 * screenHeight / 12 - 24)}, screenHeight / 24, 0, WHITE);
+		if (nRanking[i][2] != 0) DrawTextEx(font, TextFormat("%02d:%02d", nRanking[i][2] / 60, nRanking[i][2] % 60), { (float) 3 * screenWidth / 5 + 16, (float) ((i + 1) * 3.6 * screenHeight / 12 )}, screenHeight / 24, 0, WHITE);
 	}
-
-	DrawRectangle(screenWidth / 10,     screenHeight / 12 - 4, screenWidth / 2 - 16, screenHeight / 12, BLACK);
-	DrawRectangle(screenWidth / 10, 4 * screenHeight / 12 - 4, screenWidth / 2 - 16, screenHeight / 12, BLACK);
-	DrawRectangle(screenWidth / 10, 7 * screenHeight / 12 - 4, screenWidth / 2 - 16, screenHeight / 12, BLACK);
-
-	DrawText(TextFormat("easy")  , screenWidth / 8 + 18,     screenHeight / 12 - 6, screenHeight / 12 - 4, GREEN );
-	DrawText(TextFormat("medium"), screenWidth / 8 + 2 , 4 * screenHeight / 12 - 2, screenHeight / 12 - 4, YELLOW);
-	DrawText(TextFormat("hard")  , screenWidth / 8 + 18, 7 * screenHeight / 12    , screenHeight / 12 - 4, RED   );
 
 	EndDrawing();
 }
