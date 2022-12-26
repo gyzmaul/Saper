@@ -14,10 +14,9 @@ int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuH
 int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 Texture2D AGHFlag, UJbomb, redX;
-Texture2D MSbackground, Ranks;
+Texture2D MSbackground, Ranks, Cog, Biwo;
 
 Font font = { 0 };
-
 
 void sizeEasy(int* x, int* y, int* b)
 {
@@ -205,34 +204,12 @@ void DrawMenu(int menu)
 	DrawTextEx(font, "medium", { (float)(screenWidth / 6), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, YELLOW);
 	DrawTextEx(font, "hard"  , { (float)(screenWidth / 6), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, RED);
 	DrawTexture(Ranks, screenWidth / 6 - 4, 9.6 * screenHeight / 12, WHITE);
+	DrawTexture(Cog  , screenWidth / 2 - 36, 9.6 * screenHeight / 12 - 4, WHITE);
+	DrawTexture(Biwo  , 3 * screenWidth / 4 - 30, 9.6 * screenHeight / 12 - 4, WHITE);
 
 
 	EndDrawing();
 }
-
-/*void DrawEndgameLose()
-{
-	BeginDrawing();
-
-	ClearBackground(BLACK);
-	DrawText(TextFormat("Przegrales"), screenWidth / 8  +10, screenHeight / 6, 2 * POLE, RED);
-	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 12, DARKBROWN);
-
-	EndDrawing();
-}
-
-void DrawEndgameWin(int time)
-{
-	BeginDrawing();
-
-	ClearBackground(BLACK);
-	DrawText(TextFormat("Wygrales"), screenWidth / 4 - 2, screenHeight / 6, 2 * POLE, GREEN);
-	DrawText(TextFormat("0%d:%d", (time / 60), time % 60), 3 * screenWidth / 8, screenHeight / 3, 2 * POLE, WHITE);
-
-	DrawRectangle(screenWidth / 4, 4 * screenHeight / 6, screenWidth / 2, screenHeight / 12, DARKGREEN);
-
-	EndDrawing();
-}*/
 
 void LoadTexturesGame()
 {
@@ -252,12 +229,16 @@ void LoadTexturesMenu()
 {
 	MSbackground = LoadTexture("textures/msaghMED.png");
 	Ranks = LoadTexture("textures/ranks.png");
+	Cog = LoadTexture("textures/cog.png");
+	Biwo = LoadTexture("textures/biwo.png");
 }
 
 void UnloadTexturesMenu()
 {
 	UnloadTexture(MSbackground);
 	UnloadTexture(Ranks);
+	UnloadTexture(Cog);
+	UnloadTexture(Biwo);
 }
 
 void DrawRanking(int** nRanking)
@@ -295,19 +276,10 @@ void DrawRanking(int** nRanking)
 
 void LoadFonts()
 {
-	//font = LoadFont("resources/fonts/alagard.png");
-	//font = LoadFont("resources/fonts/pixelplay.png");
-	//font = LoadFont("resources/fonts/mecha.png");
-	//font = LoadFont("resources/fonts/setback.png");
-	//font = LoadFont("resources/fonts/romulus.png");
-	//font = LoadFont("resources/fonts/pixantiqua.fnt");
 	font = LoadFontEx("Azonix.otf", 100, NULL, 0);
-	//font = LoadFont("resources/fonts/alpha_beta.png");
-	//font = LoadFont("resources/fonts/jupiter_crash.png");
 }
 
 void UnloadFonts()
 {
-	//for (int i = 0; i < 8; i++) 
 	UnloadFont(font);
 }
