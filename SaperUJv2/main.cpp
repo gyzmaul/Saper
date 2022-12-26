@@ -47,10 +47,10 @@ int main()
 	int coX, coY;
 	Cell** grid = NULL;
 
-	Rectangle easyRec = { screenWidth / 4, 5.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
-	Rectangle medRec  = { screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
-	Rectangle hardRec = { screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12 };
-	Rectangle rankRec = { screenWidth / 4,  10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12 };
+	Rectangle easyRec = { screenWidth / 6    , 6.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
+	Rectangle medRec  = { screenWidth / 6    , 7.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
+	Rectangle hardRec = { screenWidth / 6    , 8.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
+	Rectangle rankRec = { screenWidth / 6 - 4, 9.6 * screenHeight / 12, 76, 54 };
 
 	int menu = 0;
 

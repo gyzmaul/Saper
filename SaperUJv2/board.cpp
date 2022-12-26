@@ -195,22 +195,16 @@ void DrawMenu(int menu)
 
 	ClearBackground(BLACK);
 	DrawTexture(MSbackground, 0, 0, WHITE);
-	DrawRectangle(screenWidth / 4, 5.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
-	DrawRectangle(screenWidth / 4,   7 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
-	DrawRectangle(screenWidth / 4, 8.5 * screenHeight / 12, screenWidth / 2, screenHeight / 12, DARKGRAY);
-	DrawRectangle(screenWidth / 4,  10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12, DARKGRAY);
-	DrawRectangle(screenWidth - screenWidth / 2 + screenHeight / 48,  10 * screenHeight / 12, screenWidth / 4 - screenHeight / 48, screenHeight / 12, DARKGRAY);
 
-	if(menu==1)DrawRectangle(screenWidth / 4 + 2, 5.5 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
-	if(menu==2)DrawRectangle(screenWidth / 4 + 2,   7 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
-	if(menu==3)DrawRectangle(screenWidth / 4 + 2, 8.5 * screenHeight / 12 + 2, screenWidth / 2 - 4, screenHeight / 12 - 4, GRAY);
-	if(menu==4)DrawRectangle(screenWidth / 4 + 2,  10 * screenHeight / 12 + 2, screenWidth / 4 - screenHeight / 48 - 4, screenHeight / 12 - 4, GRAY);
+	if(menu==1) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(6.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
+	if(menu==2) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
+	if(menu==3) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
+	if(menu==4) DrawTextEx(font, "_", { (float)(screenWidth / 6 + 20), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 
-	//DrawText(TextFormat("easy")  , screenWidth / 4 + 36, 5.5 * screenHeight / 12    , screenHeight / 12 - 4, GREEN);
-	DrawTextEx(font, "easy", { (float)(screenWidth / 4 + 36), (float)(5.5 * screenHeight / 12) }, screenHeight / 12 - 4, 4, GREEN);
-	DrawText(TextFormat("medium"), screenWidth / 4 + 18,   7 * screenHeight / 12 + 2, screenHeight / 12 - 4, YELLOW);
-	DrawText(TextFormat("hard")  , screenWidth / 4 + 36, 8.5 * screenHeight / 12 + 5, screenHeight / 12 - 4, RED);
-	DrawTexture(Ranks, screenWidth / 4, 10 * screenHeight / 12, WHITE);
+	DrawTextEx(font, "easy",   { (float)(screenWidth / 6), (float)(6.2 * screenHeight / 12) }, screenHeight / 18, 4, GREEN);
+	DrawTextEx(font, "medium", { (float)(screenWidth / 6), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, YELLOW);
+	DrawTextEx(font, "hard"  , { (float)(screenWidth / 6), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, RED);
+	DrawTexture(Ranks, screenWidth / 6 - 4, 9.6 * screenHeight / 12, WHITE);
 
 
 	EndDrawing();
@@ -307,7 +301,7 @@ void LoadFonts()
 	//font = LoadFont("resources/fonts/setback.png");
 	//font = LoadFont("resources/fonts/romulus.png");
 	//font = LoadFont("resources/fonts/pixantiqua.fnt");
-	font = LoadFontEx("upheavtt.ttf", 20, NULL, 0);
+	font = LoadFontEx("Azonix.otf", 100, NULL, 0);
 	//font = LoadFont("resources/fonts/alpha_beta.png");
 	//font = LoadFont("resources/fonts/jupiter_crash.png");
 }

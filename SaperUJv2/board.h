@@ -10,7 +10,7 @@
 #define EASYB 10
 #define MEDX 16
 #define MEDY 24
-#define MEDB 96
+#define MEDB 80
 #define HARDX 26
 #define HARDY 38
 #define HARDB 230

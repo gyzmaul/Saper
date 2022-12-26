@@ -110,21 +110,24 @@ void fnMemoryFreeInt(int sizeX, int** aTab)
 
 void updateRanks(int time, int** nRanking, int mode)
 {
-	if (time < nRanking[mode - 1][0] || nRanking[mode - 1][0] == 0)
+	if (time != nRanking[mode - 1][0] && time != nRanking[mode - 1][1] && time != nRanking[mode - 1][2])
 	{
-		nRanking[mode - 1][2] = nRanking[mode - 1][1];
-		nRanking[mode - 1][1] = nRanking[mode - 1][0];
-		nRanking[mode - 1][0] = time;
-	}
+		if (time < nRanking[mode - 1][0] || nRanking[mode - 1][0] == 0)
+		{
+			nRanking[mode - 1][2] = nRanking[mode - 1][1];
+			nRanking[mode - 1][1] = nRanking[mode - 1][0];
+			nRanking[mode - 1][0] = time;
+		}
 
-	else if (time < nRanking[mode - 1][1] || nRanking[mode - 1][1] == 0)
-	{
-		nRanking[mode - 1][2] = nRanking[mode - 1][1];
-		nRanking[mode - 1][1] = time;
-	}
+		else if (time < nRanking[mode - 1][1] || nRanking[mode - 1][1] == 0)
+		{
+			nRanking[mode - 1][2] = nRanking[mode - 1][1];
+			nRanking[mode - 1][1] = time;
+		}
 
-	else if (time < nRanking[mode - 1][2] || nRanking[mode - 1][2] == 0)
-	{
-		nRanking[mode - 1][2] = time;
+		else if (time < nRanking[mode - 1][2] || nRanking[mode - 1][2] == 0)
+		{
+			nRanking[mode - 1][2] = time;
+		}
 	}
 }
