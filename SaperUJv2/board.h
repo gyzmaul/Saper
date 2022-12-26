@@ -34,4 +34,7 @@ void UnloadTexturesGame();
 void UnloadTexturesMenu();
 void LoadFonts();
 void UnloadFonts();
-void DrawSettings();
+void DrawSettings(int cellColor);
+void changeColor(int* cellColor);
+void setColors(int cellColor);
+//void getColor(int* cellColor);

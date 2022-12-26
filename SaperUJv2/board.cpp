@@ -4,7 +4,10 @@
 #include <iostream>
 #include <string>
 
+#define COLORS 18
+
 using namespace std;
+
 
 int sizeX = MEDX;
 int sizeY = MEDY;
@@ -14,12 +17,17 @@ int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuH
 int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 Texture2D AGHFlag, UJbomb, redX;
-Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, arrow1, arrow2;
+Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, settingsBackground, arrow1, arrow2;
 
 Font font = { 0 };
 
 Rectangle backRec = { 30, 10, 68, 40 };
 
+Color kolor = GRAY;
+
+Color colorList[COLORS] = { GRAY , DARKGRAY , YELLOW , GOLD , ORANGE , GREEN , LIME , DARKGREEN , SKYBLUE , BLUE , DARKBLUE , PINK , PURPLE , VIOLET , DARKPURPLE , BEIGE , BROWN , RAYWHITE };
+const char* colorNames[COLORS] = { "GRAY" , "DARKGRAY" , "YELLOW" , "GOLD" , "ORANGE" , "GREEN" , "LIME" , "DARKGREEN" , "SKYBLUE" , "BLUE" , "DARKBLUE" , "PINK" , "PURPLE" , "VIOLET" , "DARKPURPLE" , "BEIGE" , "BROWN" , "RAYWHITE" };
+Rectangle colorsRec[COLORS];
 
 void sizeEasy(int* x, int* y, int* b)
 {
@@ -78,7 +86,7 @@ void CellDraw(Cell** grid, int i, int j, int status)
 		if (grid[i][j].bombsAround == 0) DrawRectangle(x, y, POLE, POLE, BLACK);
 		else if (grid[i][j].bombsAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
 	}
-	else DrawRectangle(x, y, POLE, POLE, GRAY);
+	else DrawRectangle(x, y, POLE, POLE, kolor);
 
 	if (grid[i][j].isBomb == 1 && status == 5) DrawTexture(AGHFlag, x, y, WHITE);
 	if (grid[i][j].isFlag == true)
@@ -217,9 +225,9 @@ void DrawMenu(int menu)
 
 void LoadTexturesGame()
 {
-	AGHFlag = LoadTexture("textures/AGH_400px.png");
-	UJbomb = LoadTexture("textures/UJ_400px.png");
-	redX = LoadTexture("textures/redX.png");
+	AGHFlag = LoadTexture("files/AGH_400px.png");
+	UJbomb = LoadTexture("files/UJ_400px.png");
+	redX = LoadTexture("files/redX.png");
 }
 
 void UnloadTexturesGame()
@@ -231,13 +239,14 @@ void UnloadTexturesGame()
 
 void LoadTexturesMenu()
 {
-	menuBackground = LoadTexture("textures/msaghMED.png");
-	Ranks = LoadTexture("textures/ranks.png");
-	Cog = LoadTexture("textures/cog.png");
-	Biwo = LoadTexture("textures/biwo.png");
-	rankBackground = LoadTexture("textures/msaghMEDranking2.png");
-	arrow1 = LoadTexture("textures/arrow1.png");
-	arrow2 = LoadTexture("textures/arrow2.png");
+	menuBackground = LoadTexture("files/msaghMED.png");
+	Ranks = LoadTexture("files/ranks.png");
+	Cog = LoadTexture("files/cog.png");
+	Biwo = LoadTexture("files/biwo.png");
+	rankBackground = LoadTexture("files/msaghMEDranking2.png");
+	settingsBackground = LoadTexture("files/msaghMEDsettings.png");
+	arrow1 = LoadTexture("files/arrow1.png");
+	arrow2 = LoadTexture("files/arrow2.png");
 }
 
 void UnloadTexturesMenu()
@@ -247,6 +256,7 @@ void UnloadTexturesMenu()
 	UnloadTexture(Cog);
 	UnloadTexture(Biwo);
 	UnloadTexture(rankBackground);
+	UnloadTexture(settingsBackground);
 	UnloadTexture(arrow1);
 	UnloadTexture(arrow2);
 }
@@ -273,7 +283,7 @@ void DrawRanking(int** nRanking)
 
 void LoadFonts()
 {
-	font = LoadFontEx("Azonix.otf", 100, NULL, 0);
+	font = LoadFontEx("files/Azonix.otf", 100, NULL, 0);
 }
 
 void UnloadFonts()
@@ -281,12 +291,68 @@ void UnloadFonts()
 	UnloadFont(font);
 }
 
-void DrawSettings()
+void DrawSettings(int cellColor)
 {
 	BeginDrawing();
 
 	ClearBackground(BLACK);
-	DrawTexture(menuBackground, 0, 0, WHITE);
+	DrawTexture(settingsBackground, 0, 0, WHITE);
+
+	if (CheckCollisionPointRec(GetMousePosition(), backRec)) DrawTexture(arrow2, 30, 10, WHITE);
+	else DrawTexture(arrow1, 30, 10, WHITE);
+
+	for (int i = 0; i < COLORS; i++)
+	{
+		DrawRectangle(56, 86 + i * 28, 64, 24, colorList[i]);
+		if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) DrawTextEx(font, colorNames[i], { (float)(136), (float)(88 + i * 28) }, 22, 1, colorList[i]);
+		else DrawTextEx(font, colorNames[i], {(float)(136), (float)(88 + i * 28)}, 22, 1, WHITE);
+	}
+
+	DrawTextEx(font, ">", {(float)(42), (float)(88 + cellColor * 28)}, 22, 1, WHITE);
+
+	/*if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+	{
+		for (int i = 0; i < COLORS; i++)
+		{
+			if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) *changeFlag = 1;;
+		}
+
+		if (CheckCollisionPointRec(GetMousePosition(), backRec)) changeFlag = 0;
+	}
+
+	if ((*changeFlag) == 1)
+	{
+		DrawTextEx(font, "color changed", {(float)(136), (float)(30)}, 22, 1, WHITE);
+	}*/
 
 	EndDrawing();
 }
+
+void changeColor(int* cellColor)
+{
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	{
+		for(int i = 0; i < COLORS; i++)
+		{
+			if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) { kolor = colorList[i]; *cellColor = i; }
+		}
+	}
+}
+
+void setColors(int cellColor)
+{
+	kolor = colorList[cellColor];
+
+	for (int i = 0; i < COLORS; i++)
+	{
+		colorsRec[i] = { 56, (float) 86 + i * 28, (float)(2 * screenWidth / 3 + 18), 24 };
+	}
+}
+
+/*void getColor(int* cellColor)
+{
+	for (int i = 0; i < COLORS; i++)
+	{
+		if (kolor == colorList[i]) *cellColor = i;
+	}
+}*/

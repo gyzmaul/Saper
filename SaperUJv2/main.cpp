@@ -42,6 +42,8 @@ int main()
 	int rev = sizeX * sizeY;
 	revealed = &rev;
 
+	int cellColor;
+
 	double* timeStart;
 	double* timeStop;
 	double* timeTemp;
@@ -56,10 +58,11 @@ int main()
 	Rectangle cogRec = { screenWidth / 2 - 36, 9.6 * screenHeight / 12 - 4, 76, 54 };
 	Rectangle backRec = { 30, 10, 76, 54 };
 
+
 	//-file-read------------------------------------------------------------------------
 
 	std::ifstream ranking;
-	ranking.open("ranking.txt");
+	ranking.open("files/data.txt");
 	int** nRanking=NULL;
 	nRanking = fnMemoryAllocInt(3, 3, nRanking);
 	for (int i = 0; i < 3; i++)
@@ -69,12 +72,17 @@ int main()
 			ranking >> nRanking[i][j];
 		}
 	}
+	ranking >> cellColor;
+
 	ranking.close();
+
+	setColors(cellColor);
 
 	//-GAME-----------------------------------------------------------------------------
 
 	while (gameIsRunning)
 	{
+
 		//-MENU-----------------------------------------------------------------------------
 
 		OpenWindow("Menu");
@@ -82,7 +90,7 @@ int main()
 		LoadTexturesMenu();
 		LoadFonts();
 
-		while (status==1)
+		while (status==1) //menu
 		{
 			while (status == 1 && menuScreen == 1)
 			{
@@ -101,7 +109,7 @@ int main()
 					if (CheckCollisionPointRec(GetMousePosition(), medRec )) { status = 2; gameMode = 2; }
 					if (CheckCollisionPointRec(GetMousePosition(), hardRec)) { status = 2; gameMode = 3; }
 					if (CheckCollisionPointRec(GetMousePosition(), rankRec)) { menuScreen = 2; }
-					if (CheckCollisionPointRec(GetMousePosition(), cogRec)) { menuScreen = 3; }
+					if (CheckCollisionPointRec(GetMousePosition(), cogRec )) { menuScreen = 3; }
 				}
 
 				if (WindowShouldClose())
@@ -111,7 +119,7 @@ int main()
 				}
 			}
 
-			while (menuScreen == 2)
+			while (menuScreen == 2) //ranking
 			{
 				DrawRanking(nRanking);
 
@@ -126,10 +134,12 @@ int main()
 					break;
 				}
 			}
-			
-			while (menuScreen == 3)
+
+			while (menuScreen == 3) //settings
 			{
-				DrawSettings();
+				DrawSettings(cellColor);
+
+				changeColor(&cellColor);
 
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
@@ -373,7 +383,7 @@ int main()
 	}
 
 	std::ofstream newRanking;
-	newRanking.open("ranking.txt");
+	newRanking.open("files/data.txt");
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -382,6 +392,8 @@ int main()
 			newRanking << nRanking[i][j] << std::endl;
 		}
 	}
+	newRanking << cellColor << std::endl;
+
 	newRanking.close();
 	fnMemoryFreeInt(3, nRanking);
 
