@@ -34,3 +34,4 @@ void UnloadTexturesGame();
 void UnloadTexturesMenu();
 void LoadFonts();
 void UnloadFonts();
+void DrawSettings();

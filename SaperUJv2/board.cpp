@@ -18,6 +18,9 @@ Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, arrow1, arrow2;
 
 Font font = { 0 };
 
+Rectangle backRec = { 30, 10, 68, 40 };
+
+
 void sizeEasy(int* x, int* y, int* b)
 {
 	sizeX = EASYX;
@@ -199,6 +202,7 @@ void DrawMenu(int menu)
 	if(menu==2) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==3) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==4) DrawTextEx(font, "_", { (float)(screenWidth / 6 + 20), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
+	if(menu==5) DrawTextEx(font, "_", { (float)(screenWidth / 2 - 12), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 
 	DrawTextEx(font, "easy",   { (float)(screenWidth / 6), (float)(6.2 * screenHeight / 12) }, screenHeight / 18, 4, GREEN);
 	DrawTextEx(font, "medium", { (float)(screenWidth / 6), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, YELLOW);
@@ -253,7 +257,9 @@ void DrawRanking(int** nRanking)
 
 	ClearBackground(BLACK);
 	DrawTexture(rankBackground, 0, 0, WHITE);
-	DrawTexture(arrow1, 30, 10, WHITE);
+
+	if (CheckCollisionPointRec(GetMousePosition(), backRec)) DrawTexture(arrow2, 30, 10, WHITE);
+	else DrawTexture(arrow1, 30, 10, WHITE);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -273,4 +279,14 @@ void LoadFonts()
 void UnloadFonts()
 {
 	UnloadFont(font);
+}
+
+void DrawSettings()
+{
+	BeginDrawing();
+
+	ClearBackground(BLACK);
+	DrawTexture(menuBackground, 0, 0, WHITE);
+
+	EndDrawing();
 }

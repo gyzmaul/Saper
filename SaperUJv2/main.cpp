@@ -22,8 +22,9 @@ int main()
 
 	bool gameIsRunning = 1;
 
-	int menu = 0;
-	int mode = 0;
+	int menuScreen = 1;
+	int menuHighlight = 0;
+	int gameMode = 0;
 	//mode = 1 easy
 	//mode = 2 med
 	//mode = 3 hard
@@ -52,6 +53,7 @@ int main()
 	Rectangle medRec  = { screenWidth / 6    , 7.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
 	Rectangle hardRec = { screenWidth / 6    , 8.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
 	Rectangle rankRec = { screenWidth / 6 - 4, 9.6 * screenHeight / 12, 76, 54 };
+	Rectangle cogRec = { screenWidth / 2 - 36, 9.6 * screenHeight / 12 - 4, 76, 54 };
 	Rectangle backRec = { 30, 10, 76, 54 };
 
 	//-file-read------------------------------------------------------------------------
@@ -80,24 +82,26 @@ int main()
 		LoadTexturesMenu();
 		LoadFonts();
 
-		while (status==1 || status == 6)
+		while (status==1)
 		{
-			while (status == 1)
+			while (status == 1 && menuScreen == 1)
 			{
-				if (CheckCollisionPointRec(GetMousePosition(), easyRec)) menu = 1;
-				if (CheckCollisionPointRec(GetMousePosition(), medRec )) menu = 2;
-				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) menu = 3;
-				if (CheckCollisionPointRec(GetMousePosition(), rankRec)) menu = 4;
+				if (CheckCollisionPointRec(GetMousePosition(), easyRec)) menuHighlight = 1;
+				if (CheckCollisionPointRec(GetMousePosition(), medRec )) menuHighlight = 2;
+				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) menuHighlight = 3;
+				if (CheckCollisionPointRec(GetMousePosition(), rankRec)) menuHighlight = 4;
+				if (CheckCollisionPointRec(GetMousePosition(), cogRec )) menuHighlight = 5;
 
-				DrawMenu(menu);
-				menu = 0;
+				DrawMenu(menuHighlight);
+				menuHighlight = 0;
 
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
-					if (CheckCollisionPointRec(GetMousePosition(), easyRec)) { status = 2; mode = 1; }
-					if (CheckCollisionPointRec(GetMousePosition(), medRec )) { status = 2; mode = 2; }
-					if (CheckCollisionPointRec(GetMousePosition(), hardRec)) { status = 2; mode = 3; }
-					if (CheckCollisionPointRec(GetMousePosition(), rankRec)) { status = 6; }
+					if (CheckCollisionPointRec(GetMousePosition(), easyRec)) { status = 2; gameMode = 1; }
+					if (CheckCollisionPointRec(GetMousePosition(), medRec )) { status = 2; gameMode = 2; }
+					if (CheckCollisionPointRec(GetMousePosition(), hardRec)) { status = 2; gameMode = 3; }
+					if (CheckCollisionPointRec(GetMousePosition(), rankRec)) { menuScreen = 2; }
+					if (CheckCollisionPointRec(GetMousePosition(), cogRec)) { menuScreen = 3; }
 				}
 
 				if (WindowShouldClose())
@@ -107,15 +111,29 @@ int main()
 				}
 			}
 
-			while (status == 6)
+			while (menuScreen == 2)
 			{
-				if (CheckCollisionPointRec(GetMousePosition(), easyRec));
-				
 				DrawRanking(nRanking);
 
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
-					if (CheckCollisionPointRec(GetMousePosition(), backRec)) { status = 1; }
+					if (CheckCollisionPointRec(GetMousePosition(), backRec)) { menuScreen = 1; }
+				}
+
+				if (WindowShouldClose())
+				{
+					status = 0;
+					break;
+				}
+			}
+			
+			while (menuScreen == 3)
+			{
+				DrawSettings();
+
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					if (CheckCollisionPointRec(GetMousePosition(), backRec)) { menuScreen = 1; }
 				}
 
 				if (WindowShouldClose())
@@ -133,7 +151,7 @@ int main()
 
 		//-LOADING--------------------------------------------------------------------------
 
-		switch (mode)
+		switch (gameMode)
 		{
 		case 1: sizeEasy(&sizeX, &sizeY, &bombs); break;
 
@@ -301,7 +319,7 @@ int main()
 
 		if (status == 5)
 		{
-			updateRanks((*timeStop - *timeStart) / CLOCKS_PER_SEC, nRanking, mode);
+			updateRanks((*timeStop - *timeStart) / CLOCKS_PER_SEC, nRanking, gameMode);
 		}
 
 		while (status == 5)
