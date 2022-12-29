@@ -71,9 +71,9 @@ int FlagCount(Cell** grid, int a, int b, int sizeX, int sizeY)
 	return flags;
 }
 
-void CheckWin(int bombs, int revealed, int* status)
+void CheckWin(int bombs, int stillHidden, int* status, int correct)
 {
-	if (revealed == bombs) *status = 5;
+	if (stillHidden == bombs || correct == bombs) *status = 5;
 }
 
 int** fnMemoryAllocInt(int nSizeX, int nSizeY, int** aTab)
@@ -130,4 +130,19 @@ void updateRanks(int time, int** nRanking, int mode)
 			nRanking[mode - 1][2] = time;
 		}
 	}
+}
+
+int countCorrect(Cell** grid, int sizeX, int sizeY)
+{
+	int correct = 0;
+	
+	for (int x = 0; x < sizeX; x++)
+	{
+		for (int y = 0; y < sizeY; y++)
+		{
+			if (grid[x][y].isBomb == 1 && grid[x][y].isFlag == 1) correct++;
+		}
+	}
+
+	return correct;
 }

@@ -15,8 +15,9 @@ void fnMemoryFree(int sizeX, Cell** aTab);
 void CellIndex(Cell** grid, int sizeX, int sizeY);
 bool CheckIndex(int x, int y, int sizeX, int sizeY);
 int FlagCount(Cell** grid, int a, int b, int sizeX, int sizeY);
-void CheckWin(int bombs, int revealed, int* status);
+void CheckWin(int bombs, int revealed, int* status, int correct);
 int** fnMemoryAllocInt(int nSizeX, int nSizeY, int** aTab);
 void fnMemoryFreeInt(int sizeX, int** aTab);
 void updateRanks(int time, int** ranking, int mode);
+int countCorrect(Cell** grid, int sizeX, int sizeY);
 

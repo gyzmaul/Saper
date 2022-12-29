@@ -10,7 +10,7 @@
 #define EASYB 10
 #define MEDX 16
 #define MEDY 24
-#define MEDB 80
+#define MEDB 40
 #define HARDX 26
 #define HARDY 38
 #define HARDB 230
@@ -35,3 +35,4 @@ void UnloadFonts();
 void DrawSettings(int cellColor);
 void changeColor(int* cellColor);
 void setColors(int cellColor);
+void cellShuffle(int sizeX, int sizeY, int nUJ, Cell** grid, int correct);

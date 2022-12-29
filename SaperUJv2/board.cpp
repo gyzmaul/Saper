@@ -82,15 +82,28 @@ void sizeHard(int* x, int* y, int* b)
 
 void CellDraw(Cell** grid, int i, int j, int status)
 {
+	int revealedAround = 0;
+
 	int x = MARGINES + i * (POLE + SPACE);
 	int y = MARGINES + j * (POLE + SPACE) + menuHeight;
 
-	if (grid[i][j].isBomb == 1 && status == 4 && grid[i][j].isFlag == 0) DrawTexture(UJbomb, x, y, WHITE);
+	
+	for (int m = -1; m <= 1; m++)
+	{
+		for (int n = -1; n <= 1; n++)
+		{
+			if (m == 0 && n == 0) continue;
+			if (CheckIndex(i + m, j + n, sizeX, sizeY))
+			{
+				if (!grid[i + m][j + n].isRevealed) revealedAround++;
+			}
+		}
+	}
 
+	if (grid[i][j].isBomb == 1 && status == 4 && grid[i][j].isFlag == 0) DrawTexture(UJbomb, x, y, WHITE);
 	else if (grid[i][j].isRevealed == true && grid[i][j].isFlag == false)
 	{
-		if (grid[i][j].bombsAround == 0) DrawRectangle(x, y, POLE, POLE, BLACK);
-		else if (grid[i][j].bombsAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
+		if (revealedAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
 	}
 	else DrawRectangle(x, y, POLE, POLE, kolor);
 
@@ -103,7 +116,7 @@ void CellDraw(Cell** grid, int i, int j, int status)
 	if (grid[i][j].isBomb == 0 && status == 4 && grid[i][j].isFlag == 1) DrawTexture(redX, x, y, WHITE);
 }
 
-void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, int* revealed)
+void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, int* stillHidden)
 {
 	if (grid[i][j].isFlag == 0)
 	{
@@ -115,13 +128,13 @@ void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, in
 				{
 					if (CheckIndex(i + x, j + y, sizeX, sizeY))
 					{
-						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status, revealed);
+						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status, stillHidden);
 					}
 				}
 			}
 		}
 
-		if(!grid[i][j].isRevealed)(*revealed)--;
+		if(!grid[i][j].isRevealed)(*stillHidden)--;
 		grid[i][j].isRevealed = true;
 
 		if (grid[i][j].isBomb == 1) *status = 4;
@@ -133,7 +146,7 @@ void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, in
 				{
 					if (CheckIndex(i + x, j + y, sizeX, sizeY))
 					{
-						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status, revealed);
+						if (grid[i + x][j + y].isRevealed == false) CellReveal(grid, i + x, j + y, sizeX, sizeY, status, stillHidden);
 					}
 				}
 			}
@@ -147,6 +160,8 @@ void CellFillNumbers(int sizeX, int sizeY, Cell** grid)
 	{
 		for (int j = 0; j < sizeY; j++)
 		{
+			grid[i][j].bombsAround = 0;
+
 			if (grid[i][j].isBomb == 0)
 			{
 				for (int x = -1; x <= 1; x++)
@@ -187,6 +202,27 @@ void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int start
 	}
 }
 
+void cellShuffle(int sizeX, int sizeY, int bombs, Cell** grid, int correct)
+{
+	for (int i = 0; i < sizeX; i++)
+	{
+		for (int j = 0; j < sizeY; j++)
+		{
+			if (grid[i][j].isBomb == 1 && grid[i][j].isFlag == 0) grid[i][j].isBomb = 0;
+		}
+	}
+
+	for (int i = 0; i < (bombs - correct); i++)
+	{
+		int bombX, bombY;
+		bombX = rand() % sizeX;
+		bombY = rand() % sizeY;
+
+		if (grid[bombX][bombY].isRevealed == 1 || grid[bombX][bombY].isFlag == 1 || grid[bombX][bombY].isBomb == 1) i--;
+		else grid[bombX][bombY].isBomb = 1;
+	}
+}
+
 void DrawTaskbar(int bombsLeft, int time)
 {
 	DrawRectangle(0, 0, screenWidth, menuHeight, DARKGRAY);
@@ -211,13 +247,14 @@ void DrawMenu(int menu)
 	if(menu==3) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==4) DrawTextEx(font, "_", { (float)(screenWidth / 6 + 20), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==5) DrawTextEx(font, "_", { (float)(screenWidth / 2 - 12), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
+	if(menu==6) DrawTextEx(font, "_", { (float)(3 * screenWidth / 4 - 20), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 
 	DrawTextEx(font, "easy",   { (float)(screenWidth / 6), (float)(6.2 * screenHeight / 12) }, screenHeight / 18, 4, GREEN);
 	DrawTextEx(font, "medium", { (float)(screenWidth / 6), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, YELLOW);
 	DrawTextEx(font, "hard"  , { (float)(screenWidth / 6), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, RED);
 	DrawTexture(Ranks, screenWidth / 6 - 4, 9.6 * screenHeight / 12, WHITE);
 	DrawTexture(Cog  , screenWidth / 2 - 36, 9.6 * screenHeight / 12 - 4, WHITE);
-	//DrawTexture(Biwo  , 3 * screenWidth / 4 - 30, 9.6 * screenHeight / 12 - 4, WHITE);
+	DrawTexture(Biwo  , 3 * screenWidth / 4 - 30, 9.6 * screenHeight / 12 - 4, WHITE);
 
 
 	EndDrawing();

@@ -38,9 +38,10 @@ int main()
 	int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 	int flagsSet = 0;
-	int* revealed;
+	int correct = 0;
+	int* stillHidden;
 	int rev = sizeX * sizeY;
-	revealed = &rev;
+	stillHidden = &rev;
 
 	int cellColor;
 
@@ -55,8 +56,9 @@ int main()
 	Rectangle medRec  = { screenWidth / 6    , 7.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
 	Rectangle hardRec = { screenWidth / 6    , 8.2 * screenHeight / 12, 2 * screenWidth / 3, screenHeight / 18 };
 	Rectangle rankRec = { screenWidth / 6 - 4, 9.6 * screenHeight / 12, 76, 54 };
-	Rectangle cogRec = { screenWidth / 2 - 36, 9.6 * screenHeight / 12 - 4, 76, 54 };
-	Rectangle backRec = { 30, 10, 76, 54 };
+	Rectangle beerRec = { 3 * screenWidth / 4 - 36, 9.6 * screenHeight / 12 - 4, 64, 60 };
+	Rectangle  cogRec = { screenWidth / 2 - 30, 9.6 * screenHeight / 12 - 4, 64, 54 };
+	Rectangle backRec = { 30, 10, 68, 40};
 
 
 	//-file-read------------------------------------------------------------------------
@@ -99,6 +101,7 @@ int main()
 				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) menuHighlight = 3;
 				if (CheckCollisionPointRec(GetMousePosition(), rankRec)) menuHighlight = 4;
 				if (CheckCollisionPointRec(GetMousePosition(), cogRec )) menuHighlight = 5;
+				if (CheckCollisionPointRec(GetMousePosition(), beerRec)) menuHighlight = 6;
 
 				DrawMenu(menuHighlight);
 				menuHighlight = 0;
@@ -108,6 +111,7 @@ int main()
 					if (CheckCollisionPointRec(GetMousePosition(), easyRec)) { status = 2; gameMode = 1; }
 					if (CheckCollisionPointRec(GetMousePosition(), medRec )) { status = 2; gameMode = 2; }
 					if (CheckCollisionPointRec(GetMousePosition(), hardRec)) { status = 2; gameMode = 3; }
+					if (CheckCollisionPointRec(GetMousePosition(), beerRec)) { status = 2; gameMode = 4; }
 					if (CheckCollisionPointRec(GetMousePosition(), rankRec)) { menuScreen = 2; }
 					if (CheckCollisionPointRec(GetMousePosition(), cogRec )) { menuScreen = 3; }
 				}
@@ -166,6 +170,8 @@ int main()
 		case 1: sizeEasy(&sizeX, &sizeY, &bombs); break;
 
 		case 2: sizeMed(&sizeX, &sizeY, &bombs); break;
+		
+		case 4: sizeMed(&sizeX, &sizeY, &bombs); break;
 
 		case 3: sizeHard(&sizeX, &sizeY, &bombs); break;
 
@@ -176,7 +182,7 @@ int main()
 		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
-		*revealed = sizeX * sizeY;
+		*stillHidden = sizeX * sizeY;
 
 		if (status != 0)
 		{
@@ -239,7 +245,7 @@ int main()
 			CellFillNumbers(sizeX, sizeY, grid);
 		} while (grid[startX][startY].bombsAround > 0 || grid[startX][startY].isBomb == true); //first square must have 0 bombs around
 
-		CellReveal(grid, startX, startY, sizeX, sizeY, &status, revealed);
+		CellReveal(grid, startX, startY, sizeX, sizeY, &status, stillHidden);
 
 		*timeStart = clock();
 
@@ -269,7 +275,18 @@ int main()
 
 				if (GetMouseY() - menuHeight - SPACE > 0)
 				{
-					if (CheckIndex(coX, coY, sizeX, sizeY)) CellReveal(grid, coX, coY, sizeX, sizeY, &status, revealed);
+					if (CheckIndex(coX, coY, sizeX, sizeY))
+					{
+						int revealOld = *stillHidden;
+						CellReveal(grid, coX, coY, sizeX, sizeY, &status, stillHidden);
+
+						if (gameMode == 4 && revealOld != *stillHidden && status == 3)
+						{
+							correct = countCorrect(grid, sizeX, sizeY);
+							cellShuffle(sizeX, sizeY, bombs, grid, correct);
+							CellFillNumbers(sizeX, sizeY, grid);
+						}
+					}
 				}
 			}
 
@@ -288,7 +305,7 @@ int main()
 				}
 			}
 
-			if(status != 4) CheckWin(bombs, *revealed, &status);
+			if(status != 4) CheckWin(bombs, *stillHidden, &status, correct);
 
 			*timeTemp = clock();
 
@@ -333,7 +350,7 @@ int main()
 
 		//-WIN-SCREEN-----------------------------------------------------------------------
 
-		if (status == 5)
+		if (status == 5 && gameMode != 4)
 		{
 			updateRanks((*timeStop - *timeStart) / CLOCKS_PER_SEC, nRanking, gameMode);
 		}
@@ -381,8 +398,9 @@ int main()
 		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
+		correct = 0;
 		flagsSet = 0;
-		*revealed = sizeX*sizeY;
+		*stillHidden = sizeX*sizeY;
 
 		if (status == 0) gameIsRunning = false;
 		else status = 1;
