@@ -21,6 +21,7 @@ int main()
 	srand(time(NULL));
 
 	bool gameIsRunning = 1;
+	bool musicIsPlaying = 1;
 
 	int menuScreen = 1;
 	int menuHighlight = 0;
@@ -58,8 +59,14 @@ int main()
 	Rectangle rankRec = { screenWidth / 6 - 4, 9.6 * screenHeight / 12, 76, 54 };
 	Rectangle beerRec = { 3 * screenWidth / 4 - 36, 9.6 * screenHeight / 12 - 4, 64, 60 };
 	Rectangle  cogRec = { screenWidth / 2 - 30, 9.6 * screenHeight / 12 - 4, 64, 54 };
-	Rectangle backRec = { 30, 10, 68, 40};
+	Rectangle backRec = { 30, 10, 68, 40 };
+	Rectangle musicRec = { 16, screenHeight - menuHeight + 5, 40, 40};
 
+	Music gameOst;
+
+	Vector2 position;
+	position.x = (MONITORWIDTH - screenWidth) / 2; 
+	position.y = (MONITORHEIGHT - screenHeight) / 2;
 
 	//-file-read------------------------------------------------------------------------
 
@@ -82,12 +89,14 @@ int main()
 
 	//-GAME-----------------------------------------------------------------------------
 
+	PlayAudio(&gameOst, "files/password-infinity-123276.mp3");
+
 	while (gameIsRunning)
 	{
 
 		//-MENU-----------------------------------------------------------------------------
 
-		OpenWindow("Menu");
+		OpenWindow("Menu", position.x, position.y);
 
 		LoadTexturesMenu();
 		LoadFonts();
@@ -96,6 +105,8 @@ int main()
 		{
 			while (status == 1 && menuScreen == 1)
 			{
+				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
+
 				if (CheckCollisionPointRec(GetMousePosition(), easyRec)) menuHighlight = 1;
 				if (CheckCollisionPointRec(GetMousePosition(), medRec )) menuHighlight = 2;
 				if (CheckCollisionPointRec(GetMousePosition(), hardRec)) menuHighlight = 3;
@@ -125,6 +136,8 @@ int main()
 
 			while (menuScreen == 2) //ranking
 			{
+				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
+
 				DrawRanking(nRanking);
 
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -141,6 +154,8 @@ int main()
 
 			while (menuScreen == 3) //settings
 			{
+				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
+
 				DrawSettings(cellColor);
 
 				changeColor(&cellColor);
@@ -160,6 +175,10 @@ int main()
 
 		UnloadTexturesMenu();
 		UnloadFonts();
+
+		position = GetWindowPosition();
+		position.x += screenWidth/2;
+		position.y += screenHeight/2;
 
 		if(status != 0) CloseWindow();
 
@@ -182,11 +201,16 @@ int main()
 		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
+		musicRec = { 16, (float) screenHeight - menuHeight + 5, 40, 40 };
+
 		*stillHidden = sizeX * sizeY;
+
+		position.x -= screenWidth / 2;
+		position.y -= screenHeight / 2;
 
 		if (status != 0)
 		{
-			OpenWindow("Game");
+			OpenWindow("Game", position.x, position.y);
 		}
 
 		grid = fnMemoryAlloc(sizeX, sizeY, grid);
@@ -210,26 +234,26 @@ int main()
 
 		while (status==2)
 		{
+			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
+
 			BeginDrawing();
 			ClearBackground(BLACK);
 
 			DrawTaskbar((bombs - flagsSet), (*timeTemp - *timeStart) / CLOCKS_PER_SEC);
 
-			for (int i = 0; i < sizeX; i++)
-			{
-				for (int j = 0; j < sizeY; j++)
-				{
-					CellDraw(grid, i, j, status);
-				}
-			}
+			DrawBottomBar(musicIsPlaying);
+
+			CellDraw(grid, status);
 
 			EndDrawing();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
+				if (CheckCollisionPointRec(GetMousePosition(), musicRec)) musicIsPlaying = !musicIsPlaying;
+
 				startX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				startY = (GetMouseY() - menuHeight - SPACE) / (POLE + SPACE);
-				if (GetMouseY() - menuHeight - SPACE > 0)status = 3;
+				if (GetMouseY() - menuHeight - SPACE > 0 && GetMouseY() < screenHeight - menuHeight) status = 3;
 			}
 
 			if (WindowShouldClose())
@@ -253,27 +277,29 @@ int main()
 
 		while (status==3)
 		{
+			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
+
 			BeginDrawing();
 			ClearBackground(BLACK);
 
 			DrawTaskbar((bombs-flagsSet), (*timeTemp-*timeStart)/CLOCKS_PER_SEC);
 
-			for (int i = 0; i < sizeX; i++)
-			{
-				for (int j = 0; j < sizeY; j++)
-				{
-					CellDraw(grid, i, j, status);
-				}
-			}
+			DrawBottomBar(musicIsPlaying);
+
+			CellDraw(grid, status);
 
 			EndDrawing();
 
+			correct = countCorrect(grid, sizeX, sizeY);
+
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
+				if (CheckCollisionPointRec(GetMousePosition(), musicRec)) musicIsPlaying = !musicIsPlaying;
+
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				coY = (GetMouseY() - menuHeight - 2*SPACE) / (POLE + SPACE);
 
-				if (GetMouseY() - menuHeight - SPACE > 0)
+				if (GetMouseY() - menuHeight - SPACE > 0 && GetMouseY() < screenHeight - menuHeight)
 				{
 					if (CheckIndex(coX, coY, sizeX, sizeY))
 					{
@@ -282,7 +308,6 @@ int main()
 
 						if (gameMode == 4 && revealOld != *stillHidden && status == 3)
 						{
-							correct = countCorrect(grid, sizeX, sizeY);
 							cellShuffle(sizeX, sizeY, bombs, grid, correct);
 							CellFillNumbers(sizeX, sizeY, grid);
 						}
@@ -305,7 +330,7 @@ int main()
 				}
 			}
 
-			if(status != 4) CheckWin(bombs, *stillHidden, &status, correct);
+			if(status != 4) CheckWin(bombs, *stillHidden, &status);
 
 			*timeTemp = clock();
 
@@ -323,6 +348,8 @@ int main()
 
 		while (status == 4)
 		{
+			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
+
 			BeginDrawing();
 			ClearBackground(BLACK);
 
@@ -330,13 +357,8 @@ int main()
 
 			DrawText(TextFormat("Przegrales"), screenWidth / 2 - 86, screenHeight - menuHeight + 12, 1.5 * POLE, RED);
 
-			for (int i = 0; i < sizeX; i++)
-			{
-				for (int j = 0; j < sizeY; j++)
-				{
-					CellDraw(grid, i, j, status);
-				}
-			}
+			CellDraw(grid, status);
+
 			EndDrawing();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) status = 1;
@@ -357,6 +379,8 @@ int main()
 
 		while (status == 5)
 		{
+			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
+
 			BeginDrawing();
 			ClearBackground(BLACK);
 
@@ -364,13 +388,8 @@ int main()
 
 			DrawText(TextFormat("Wygrales"), screenWidth / 2 - 72, screenHeight - menuHeight + 12, 1.5 * POLE, GREEN);
 
-			for (int i = 0; i < sizeX; i++)
-			{
-				for (int j = 0; j < sizeY; j++)
-				{
-					CellDraw(grid, i, j, status);
-				}
-			}
+			CellDraw(grid, status);
+
 			EndDrawing();
 
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) status = 1;
@@ -386,6 +405,10 @@ int main()
 
 		UnloadTexturesGame();
 
+		position = GetWindowPosition();
+		position.x += screenWidth / 2;
+		position.y += screenHeight / 2;
+
 		CloseWindow();
 
 		fnMemoryFree(sizeX, grid);
@@ -397,6 +420,8 @@ int main()
 		menuHeight = 2 * POLE + SPACE;
 		screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
+		position.x -= screenWidth / 2;
+		position.y -= screenHeight / 2;
 
 		correct = 0;
 		flagsSet = 0;
@@ -405,6 +430,10 @@ int main()
 		if (status == 0) gameIsRunning = false;
 		else status = 1;
 	}
+
+	StopMusicStream(gameOst);
+	UnloadMusicStream(gameOst);
+	CloseAudioDevice();
 
 	std::ofstream newRanking;
 	newRanking.open("files/data.txt");

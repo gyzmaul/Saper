@@ -16,7 +16,7 @@ int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
 int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
-Texture2D AGHFlag, UJbomb, redX;
+Texture2D AGHFlag, UJbomb, redX, musicIcon;
 Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, settingsBackground, arrow1, arrow2;
 
 Font font = { 0 };
@@ -29,10 +29,20 @@ Color colorList[COLORS] = { GRAY , DARKGRAY , YELLOW , GOLD , ORANGE , GREEN , L
 const char* colorNames[COLORS] = { "GRAY" , "DARKGRAY" , "YELLOW" , "GOLD" , "ORANGE" , "GREEN" , "LIME" , "DARKGREEN" , "SKYBLUE" , "BLUE" , "DARKBLUE" , "PINK" , "PURPLE" , "VIOLET" , "DARKPURPLE" , "BEIGE" , "BROWN" , "RAYWHITE" };
 Rectangle colorsRec[COLORS];
 
-void OpenWindow(const char* caption)
+void OpenWindow(const char* caption, int x, int y)
 {
 	InitWindow(screenWidth, screenHeight, caption);
+	SetWindowPosition(x, y);
 	SetTargetFPS(144);
+}
+
+void PlayAudio(Music* OST, const char* filename)
+{
+	InitAudioDevice();
+	*OST = LoadMusicStream(filename);
+	(*OST).looping = true;
+
+	PlayMusicStream(*OST);
 }
 
 void sizeEasy(int* x, int* y, int* b)
@@ -80,40 +90,42 @@ void sizeHard(int* x, int* y, int* b)
 
 }
 
-void CellDraw(Cell** grid, int i, int j, int status)
+void CellDraw(Cell** grid, int status)
 {
-	int revealedAround = 0;
-
-	int x = MARGINES + i * (POLE + SPACE);
-	int y = MARGINES + j * (POLE + SPACE) + menuHeight;
-
-	
-	for (int m = -1; m <= 1; m++)
+	for (int i = 0; i < sizeX; i++)
 	{
-		for (int n = -1; n <= 1; n++)
+		for (int j = 0; j < sizeY; j++)
 		{
-			if (m == 0 && n == 0) continue;
-			if (CheckIndex(i + m, j + n, sizeX, sizeY))
+			int hiddenAround = 0;
+
+			int x = MARGINES + i * (POLE + SPACE);
+			int y = MARGINES + j * (POLE + SPACE) + menuHeight;
+
+
+			for (int m = -1; m <= 1; m++)
 			{
-				if (!grid[i + m][j + n].isRevealed) revealedAround++;
+				for (int n = -1; n <= 1; n++)
+				{
+					if (m == 0 && n == 0) continue;
+					if (CheckIndex(i + m, j + n, sizeX, sizeY))
+					{
+						if (!grid[i + m][j + n].isRevealed) hiddenAround++;
+					}
+				}
 			}
+
+			if (grid[i][j].isBomb == 1 && status == 4 && grid[i][j].isFlag == 0) DrawTexture(UJbomb, x, y, WHITE);
+			else if (grid[i][j].isRevealed == true && grid[i][j].isFlag == false)
+			{
+				if (hiddenAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
+			}
+			else DrawRectangle(x, y, POLE, POLE, kolor);
+
+			if (grid[i][j].isBomb == 1 && status == 5) DrawTexture(AGHFlag, x, y, WHITE);
+			if (grid[i][j].isFlag == true) DrawTexture(AGHFlag, x, y, WHITE);
+			if (grid[i][j].isBomb == 0 && status == 4 && grid[i][j].isFlag == 1) DrawTexture(redX, x, y, WHITE);
 		}
 	}
-
-	if (grid[i][j].isBomb == 1 && status == 4 && grid[i][j].isFlag == 0) DrawTexture(UJbomb, x, y, WHITE);
-	else if (grid[i][j].isRevealed == true && grid[i][j].isFlag == false)
-	{
-		if (revealedAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
-	}
-	else DrawRectangle(x, y, POLE, POLE, kolor);
-
-	if (grid[i][j].isBomb == 1 && status == 5) DrawTexture(AGHFlag, x, y, WHITE);
-	if (grid[i][j].isFlag == true)
-	{
-		//DrawText(TextFormat("F"), x + 4, y+1, POLE, DARKGRAY);
-		DrawTexture(AGHFlag, x, y, WHITE);
-	}
-	if (grid[i][j].isBomb == 0 && status == 4 && grid[i][j].isFlag == 1) DrawTexture(redX, x, y, WHITE);
 }
 
 void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int *status, int* stillHidden)
@@ -235,6 +247,12 @@ void DrawTaskbar(int bombsLeft, int time)
 	DrawText(TextFormat("%02d:%02d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2 + 4, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
 }
 
+void DrawBottomBar(int musicIsPlaying)
+{
+	DrawTexture(musicIcon, 16, screenHeight - menuHeight + 5, WHITE);
+	if(!musicIsPlaying) DrawTexture(redX, 32, screenHeight - menuHeight + 20, WHITE);
+}
+
 void DrawMenu(int menu)
 {
 	BeginDrawing();
@@ -247,7 +265,7 @@ void DrawMenu(int menu)
 	if(menu==3) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==4) DrawTextEx(font, "_", { (float)(screenWidth / 6 + 20), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==5) DrawTextEx(font, "_", { (float)(screenWidth / 2 - 12), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
-	if(menu==6) DrawTextEx(font, "_", { (float)(3 * screenWidth / 4 - 20), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
+	if(menu==6) DrawTextEx(font, "_", { (float)(3 * screenWidth / 4 - 19), (float)(10 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 
 	DrawTextEx(font, "easy",   { (float)(screenWidth / 6), (float)(6.2 * screenHeight / 12) }, screenHeight / 18, 4, GREEN);
 	DrawTextEx(font, "medium", { (float)(screenWidth / 6), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, YELLOW);
@@ -322,6 +340,7 @@ void LoadTexturesGame()
 	AGHFlag = LoadTexture("files/AGH_400px.png");
 	UJbomb = LoadTexture("files/UJ_400px.png");
 	redX = LoadTexture("files/redX.png");
+	musicIcon = LoadTexture("files/music_icon_v2.png");
 }
 
 void UnloadTexturesGame()
@@ -329,6 +348,7 @@ void UnloadTexturesGame()
 	UnloadTexture(AGHFlag);
 	UnloadTexture(UJbomb);
 	UnloadTexture(redX);
+	UnloadTexture(musicIcon);
 }
 
 void LoadTexturesMenu()

@@ -71,9 +71,9 @@ int FlagCount(Cell** grid, int a, int b, int sizeX, int sizeY)
 	return flags;
 }
 
-void CheckWin(int bombs, int stillHidden, int* status, int correct)
+void CheckWin(int bombs, int stillHidden, int* status)
 {
-	if (stillHidden == bombs || correct == bombs) *status = 5;
+	if (stillHidden == bombs) *status = 5;
 }
 
 int** fnMemoryAllocInt(int nSizeX, int nSizeY, int** aTab)
