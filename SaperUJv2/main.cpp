@@ -25,6 +25,7 @@ int main()
 
 	int menuScreen = 1;
 	int menuHighlight = 0;
+	int taskbarHighlight = 0;
 	int gameMode = 0;
 	//mode = 1 easy
 	//mode = 2 med
@@ -61,6 +62,7 @@ int main()
 	Rectangle  cogRec = { screenWidth / 2 - 30, 9.6 * screenHeight / 12 - 4, 64, 54 };
 	Rectangle backRec = { 30, 10, 68, 40 };
 	Rectangle musicRec = { 16, screenHeight - menuHeight + 5, 40, 40};
+	Rectangle backMenu = { screenWidth - 6 * POLE, screenHeight - menuHeight + MARGINES, 4 * POLE + 3 * SPACE, 2 * POLE};
 
 	Music gameOst;
 
@@ -90,6 +92,7 @@ int main()
 	//-GAME-----------------------------------------------------------------------------
 
 	PlayAudio(&gameOst, "files/password-infinity-123276.mp3");
+	SetMusicVolume( gameOst, 0.2);
 
 	while (gameIsRunning)
 	{
@@ -103,7 +106,7 @@ int main()
 
 		while (status==1) //menu
 		{
-			while (status == 1 && menuScreen == 1)
+			while (status == 1 && menuScreen == 1) //main menu
 			{
 				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
@@ -202,6 +205,7 @@ int main()
 		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 		musicRec = { 16, (float) screenHeight - menuHeight + 5, 40, 40 };
+		backMenu = { (float)screenWidth - 6 * POLE - 4 * SPACE, (float)screenHeight - menuHeight + 4 * MARGINES, 6 * POLE - 2 * MARGINES, 2 * POLE - 4 * SPACE };
 
 		*stillHidden = sizeX * sizeY;
 
@@ -231,6 +235,7 @@ int main()
 		//-GAME-FIRST-MOVE-----------------------------------------------------------------
 
 		LoadTexturesGame();
+		LoadFonts();
 
 		while (status==2)
 		{
@@ -241,19 +246,27 @@ int main()
 
 			DrawTaskbar((bombs - flagsSet), (*timeTemp - *timeStart) / CLOCKS_PER_SEC);
 
-			DrawBottomBar(musicIsPlaying);
+			DrawBottomBar(musicIsPlaying, taskbarHighlight);
 
 			CellDraw(grid, status);
 
 			EndDrawing();
 
+			taskbarHighlight = 0;
+			if (CheckCollisionPointRec(GetMousePosition(), musicRec)) taskbarHighlight = 1;
+			if (CheckCollisionPointRec(GetMousePosition(), backMenu)) taskbarHighlight = 2;
+
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				if (CheckCollisionPointRec(GetMousePosition(), musicRec)) musicIsPlaying = !musicIsPlaying;
-
-				startX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
-				startY = (GetMouseY() - menuHeight - SPACE) / (POLE + SPACE);
-				if (GetMouseY() - menuHeight - SPACE > 0 && GetMouseY() < screenHeight - menuHeight) status = 3;
+				if (CheckCollisionPointRec(GetMousePosition(), backMenu)) status = 1;
+				
+				if (GetMouseY() - menuHeight - SPACE > 0 && GetMouseY() < screenHeight - menuHeight)
+				{
+					startX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
+					startY = (GetMouseY() - menuHeight - SPACE) / (POLE + SPACE);
+					status = 3;
+				}
 			}
 
 			if (WindowShouldClose())
@@ -284,7 +297,7 @@ int main()
 
 			DrawTaskbar((bombs-flagsSet), (*timeTemp-*timeStart)/CLOCKS_PER_SEC);
 
-			DrawBottomBar(musicIsPlaying);
+			DrawBottomBar(musicIsPlaying, taskbarHighlight);
 
 			CellDraw(grid, status);
 
@@ -292,9 +305,14 @@ int main()
 
 			correct = countCorrect(grid, sizeX, sizeY);
 
+			taskbarHighlight = 0;
+			if (CheckCollisionPointRec(GetMousePosition(), musicRec)) taskbarHighlight = 1;
+			if (CheckCollisionPointRec(GetMousePosition(), backMenu)) taskbarHighlight = 2;
+
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				if (CheckCollisionPointRec(GetMousePosition(), musicRec)) musicIsPlaying = !musicIsPlaying;
+				if (CheckCollisionPointRec(GetMousePosition(), backMenu)) status = 1;
 
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				coY = (GetMouseY() - menuHeight - 2*SPACE) / (POLE + SPACE);
@@ -404,6 +422,7 @@ int main()
 		//-CLEAR-BOARD----------------------------------------------------------------------
 
 		UnloadTexturesGame();
+		UnloadFonts(); 
 
 		position = GetWindowPosition();
 		position.x += screenWidth / 2;

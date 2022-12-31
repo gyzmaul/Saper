@@ -30,16 +30,16 @@ void sizeHard(int* x, int* y, int* b);
 
 void OpenWindow(const char* caption, int x, int y);
 void DrawTaskbar(int bombsLeft, int time);
-void DrawBottomBar(int musicIsPlaying);
+void DrawBottomBar(int musicIsPlaying, int highlight);
 void DrawMenu(int menu);
 void DrawRanking(int** nRanking);
 void DrawSettings(int cellColor);
 
 void LoadTexturesGame();
 void LoadTexturesMenu();
+void LoadFonts();
 void UnloadTexturesGame();
 void UnloadTexturesMenu();
-void LoadFonts();
 void UnloadFonts();
 
 void changeColor(int* cellColor);

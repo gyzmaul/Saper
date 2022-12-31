@@ -247,9 +247,12 @@ void DrawTaskbar(int bombsLeft, int time)
 	DrawText(TextFormat("%02d:%02d", (time/60), time%60), screenWidth - MARGINES - (6 * POLE + 5 * SPACE) + POLE / 2 + 4, MARGINES + 2 * SPACE + 1, 2 * POLE, RED);
 }
 
-void DrawBottomBar(int musicIsPlaying)
+void DrawBottomBar(int musicIsPlaying, int highlight)
 {
+	if (highlight == 1) DrawRectangle(16, screenHeight - menuHeight + 5, 36, 36, GRAY);
+	if (highlight == 2) DrawRectangle(screenWidth - 6 * POLE - 4 * SPACE, screenHeight - menuHeight + 4 * MARGINES, 6 * POLE - 2 * MARGINES, 2 * POLE - 4 * SPACE, GRAY);
 	DrawTexture(musicIcon, 16, screenHeight - menuHeight + 5, WHITE);
+	DrawTextEx(font, "menu", { (float)(screenWidth - 6 * POLE - 4 * SPACE), (float)(screenHeight - menuHeight + 4 * MARGINES) }, 2 * POLE - 2 * SPACE, 1, BLACK);
 	if(!musicIsPlaying) DrawTexture(redX, 32, screenHeight - menuHeight + 20, WHITE);
 }
 
