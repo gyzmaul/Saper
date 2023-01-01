@@ -92,7 +92,7 @@ int main()
 	//-GAME-----------------------------------------------------------------------------
 
 	PlayAudio(&gameOst, "files/password-infinity-123276.mp3");
-	SetMusicVolume( gameOst, 0.2);
+	SetMusicVolume( gameOst, 0.05);
 
 	while (gameIsRunning)
 	{
