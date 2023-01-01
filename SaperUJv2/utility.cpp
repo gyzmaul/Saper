@@ -146,3 +146,14 @@ int countCorrect(Cell** grid, int sizeX, int sizeY)
 
 	return correct;
 }
+
+void windowSnap(int width, int height)
+{
+	Vector2 position = GetWindowPosition();
+
+	if (position.y < 0) SetWindowPosition(position.x, 0);
+	if (position.y + height > GetMonitorHeight(0)) SetWindowPosition(position.x, GetMonitorHeight(0) - height - 46);
+
+	if (position.x < 0) SetWindowPosition(0, position.y);
+	if (position.x + width > GetMonitorWidth(0)) SetWindowPosition(GetMonitorWidth(0) - width, position.y);
+}

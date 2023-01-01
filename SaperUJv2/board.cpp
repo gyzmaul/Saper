@@ -263,6 +263,8 @@ void DrawMenu(int menu)
 	ClearBackground(BLACK);
 	DrawTexture(menuBackground, 0, 0, WHITE);
 
+	//DrawText(TextFormat("%d\n%d\n%d\n%d\n", GetMonitorWidth(0), GetMonitorHeight(0), GetMonitorWidth(1), GetMonitorHeight(1)), 0, 0, 30, RED);
+
 	if(menu==1) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(6.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==2) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==3) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(8.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);

@@ -20,4 +20,6 @@ int** fnMemoryAllocInt(int nSizeX, int nSizeY, int** aTab);
 void fnMemoryFreeInt(int sizeX, int** aTab);
 void updateRanks(int time, int** ranking, int mode);
 int countCorrect(Cell** grid, int sizeX, int sizeY);
+void windowSnap(int width, int height);
+
 

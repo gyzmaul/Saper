@@ -69,6 +69,8 @@ int main()
 	Vector2 position;
 	position.x = (MONITORWIDTH - screenWidth) / 2; 
 	position.y = (MONITORHEIGHT - screenHeight) / 2;
+	//GetMonitorWidth(1);                          
+	//GetMonitorHeight(0);
 
 	//-file-read------------------------------------------------------------------------
 
@@ -108,6 +110,8 @@ int main()
 		{
 			while (status == 1 && menuScreen == 1) //main menu
 			{
+				windowSnap(screenWidth, screenHeight);
+
 				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 				if (CheckCollisionPointRec(GetMousePosition(), easyRec)) menuHighlight = 1;
@@ -139,6 +143,8 @@ int main()
 
 			while (menuScreen == 2) //ranking
 			{
+				windowSnap(screenWidth, screenHeight);
+
 				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 				DrawRanking(nRanking);
@@ -157,6 +163,8 @@ int main()
 
 			while (menuScreen == 3) //settings
 			{
+				windowSnap(screenWidth, screenHeight);
+
 				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 				DrawSettings(cellColor);
@@ -239,6 +247,8 @@ int main()
 
 		while (status==2)
 		{
+			windowSnap(screenWidth, screenHeight);
+
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 			BeginDrawing();
@@ -290,6 +300,8 @@ int main()
 
 		while (status==3)
 		{
+			windowSnap(screenWidth, screenHeight);
+
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 			BeginDrawing();
@@ -366,6 +378,8 @@ int main()
 
 		while (status == 4)
 		{
+			windowSnap(screenWidth, screenHeight);
+
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 			BeginDrawing();
@@ -397,6 +411,8 @@ int main()
 
 		while (status == 5)
 		{
+			windowSnap(screenWidth, screenHeight);
+
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 			BeginDrawing();
