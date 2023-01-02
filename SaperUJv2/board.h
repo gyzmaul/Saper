@@ -29,6 +29,7 @@ void sizeMed(int* x, int* y, int* b);
 void sizeHard(int* x, int* y, int* b);
 
 void OpenWindow(const char* caption, int x, int y);
+void CloseWin();
 void DrawTaskbar(int bombsLeft, int time);
 void DrawBottomBar(int musicIsPlaying, int highlight);
 void DrawMenu(int menu);

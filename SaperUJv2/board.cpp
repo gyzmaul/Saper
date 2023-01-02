@@ -16,8 +16,10 @@ int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
 int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
+Image windowIcon;
+
 Texture2D AGHFlag, UJbomb, redX, musicIcon, homeIcon;
-Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, settingsBackground, arrow1, arrow2;
+Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, settingsBackground, arrow1, arrow2, logo;
 
 Font font = { 0 };
 
@@ -34,6 +36,15 @@ void OpenWindow(const char* caption, int x, int y)
 	InitWindow(screenWidth, screenHeight, caption);
 	SetWindowPosition(x, y);
 	SetTargetFPS(144);
+
+	windowIcon = LoadImage("files/logo2.png");
+	SetWindowIcon(windowIcon);
+}
+
+void CloseWin()
+{
+	UnloadImage(windowIcon);
+	CloseWindow();
 }
 
 void PlayAudio(Music* OST, const char* filename)
@@ -264,8 +275,7 @@ void DrawMenu(int menu)
 
 	ClearBackground(BLACK);
 	DrawTexture(menuBackground, 0, 0, WHITE);
-
-	//DrawText(TextFormat("%d\n%d\n%d\n%d\n", GetMonitorWidth(0), GetMonitorHeight(0), GetMonitorWidth(1), GetMonitorHeight(1)), 0, 0, 30, RED);
+	DrawTexture(logo, screenWidth / 2 - 128, 30, WHITE);
 
 	if(menu==1) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(6.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
 	if(menu==2) DrawTextEx(font, "<", { (float)(3 * screenWidth / 4), (float)(7.2 * screenHeight / 12) }, screenHeight / 18, 4, WHITE);
@@ -370,6 +380,7 @@ void LoadTexturesMenu()
 	settingsBackground = LoadTexture("files/msaghMEDsettings.png");
 	arrow1 = LoadTexture("files/arrow1.png");
 	arrow2 = LoadTexture("files/arrow2.png");
+	logo = LoadTexture("files/logo2.png");
 }
 
 void UnloadTexturesMenu()
@@ -382,6 +393,7 @@ void UnloadTexturesMenu()
 	UnloadTexture(settingsBackground);
 	UnloadTexture(arrow1);
 	UnloadTexture(arrow2);
+	UnloadTexture(logo);
 }
 
 void LoadFonts()

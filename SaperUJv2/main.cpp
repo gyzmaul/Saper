@@ -191,7 +191,7 @@ int main()
 		position.x += screenWidth/2;
 		position.y += screenHeight/2;
 
-		if(status != 0) CloseWindow();
+		if(status != 0) CloseWin();
 
 		//-LOADING--------------------------------------------------------------------------
 
@@ -444,7 +444,7 @@ int main()
 		position.x += screenWidth / 2;
 		position.y += screenHeight / 2;
 
-		CloseWindow();
+		CloseWin();
 
 		fnMemoryFree(sizeX, grid);
 		free(timeStart);
