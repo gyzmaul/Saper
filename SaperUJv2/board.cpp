@@ -16,7 +16,7 @@ int menuHeight = 2 * POLE + SPACE + 2 * MARGINES;
 int screenHeight = POLE * sizeY + SPACE * (sizeY - 1) + MARGINES * 2 + 2 * menuHeight;
 int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
-Texture2D AGHFlag, UJbomb, redX, musicIcon;
+Texture2D AGHFlag, UJbomb, redX, musicIcon, homeIcon;
 Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, settingsBackground, arrow1, arrow2;
 
 Font font = { 0 };
@@ -250,9 +250,11 @@ void DrawTaskbar(int bombsLeft, int time)
 void DrawBottomBar(int musicIsPlaying, int highlight)
 {
 	if (highlight == 1) DrawRectangle(16, screenHeight - menuHeight + 5, 36, 36, GRAY);
-	if (highlight == 2) DrawRectangle(screenWidth - 6 * POLE - 4 * SPACE, screenHeight - menuHeight + 4 * MARGINES, 6 * POLE - 2 * MARGINES, 2 * POLE - 4 * SPACE, GRAY);
+	if (highlight == 2) DrawRectangle(screenWidth - 16 - 36, screenHeight - menuHeight + 5, 36, 36, GRAY);
+	//if (highlight == 2) DrawRectangle(screenWidth - 6 * POLE - 4 * SPACE, screenHeight - menuHeight + 4 * MARGINES, 6 * POLE - 2 * MARGINES, 2 * POLE - 4 * SPACE, GRAY);
 	DrawTexture(musicIcon, 16, screenHeight - menuHeight + 5, WHITE);
-	DrawTextEx(font, "menu", { (float)(screenWidth - 6 * POLE - 4 * SPACE), (float)(screenHeight - menuHeight + 4 * MARGINES) }, 2 * POLE - 2 * SPACE, 1, BLACK);
+	DrawTexture(homeIcon, screenWidth - 16 - 36, screenHeight - menuHeight + 5, WHITE);
+	//DrawTextEx(font, "menu", { (float)(screenWidth - 6 * POLE - 4 * SPACE), (float)(screenHeight - menuHeight + 4 * MARGINES) }, 2 * POLE - 2 * SPACE, 1, BLACK);
 	if(!musicIsPlaying) DrawTexture(redX, 32, screenHeight - menuHeight + 20, WHITE);
 }
 
@@ -346,6 +348,7 @@ void LoadTexturesGame()
 	UJbomb = LoadTexture("files/UJ_400px.png");
 	redX = LoadTexture("files/redX.png");
 	musicIcon = LoadTexture("files/music_icon_v2.png");
+	homeIcon = LoadTexture("files/Home.png");
 }
 
 void UnloadTexturesGame()
@@ -354,6 +357,7 @@ void UnloadTexturesGame()
 	UnloadTexture(UJbomb);
 	UnloadTexture(redX);
 	UnloadTexture(musicIcon);
+	UnloadTexture(homeIcon);
 }
 
 void LoadTexturesMenu()
@@ -362,7 +366,7 @@ void LoadTexturesMenu()
 	Ranks = LoadTexture("files/ranks.png");
 	Cog = LoadTexture("files/cog.png");
 	Biwo = LoadTexture("files/biwo.png");
-	rankBackground = LoadTexture("files/msaghMEDranking2.png");
+	rankBackground = LoadTexture("files/msaghMEDranking4.png");
 	settingsBackground = LoadTexture("files/msaghMEDsettings.png");
 	arrow1 = LoadTexture("files/arrow1.png");
 	arrow2 = LoadTexture("files/arrow2.png");

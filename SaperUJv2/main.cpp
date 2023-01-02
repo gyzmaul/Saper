@@ -62,7 +62,7 @@ int main()
 	Rectangle  cogRec = { screenWidth / 2 - 30, 9.6 * screenHeight / 12 - 4, 64, 54 };
 	Rectangle backRec = { 30, 10, 68, 40 };
 	Rectangle musicRec = { 16, screenHeight - menuHeight + 5, 40, 40};
-	Rectangle backMenu = { screenWidth - 6 * POLE, screenHeight - menuHeight + MARGINES, 4 * POLE + 3 * SPACE, 2 * POLE};
+	Rectangle backMenu = { screenWidth - 16 - 40, screenHeight - menuHeight + 5, 40, 40};
 
 	Music gameOst;
 
@@ -213,7 +213,7 @@ int main()
 		screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 		musicRec = { 16, (float) screenHeight - menuHeight + 5, 40, 40 };
-		backMenu = { (float)screenWidth - 6 * POLE - 4 * SPACE, (float)screenHeight - menuHeight + 4 * MARGINES, 6 * POLE - 2 * MARGINES, 2 * POLE - 4 * SPACE };
+		backMenu = { (float) screenWidth - 16 - 40, (float) screenHeight - menuHeight + 5, 40, 40 };
 
 		*stillHidden = sizeX * sizeY;
 
