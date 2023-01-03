@@ -138,7 +138,6 @@ void CellDraw(Cell** grid, int status)
 				{
 					if (nBG == 1)
 					{
-						//DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, numberColor[grid[i][j].bombsAround]);
 						if (grid[i][j].bombsAround == 1) DrawTextEx(font, TextFormat("%d", grid[i][j].bombsAround), { (float)(x + 6), (float)(y) }, POLE, 1, numberColor[grid[i][j].bombsAround]);
 						else DrawTextEx(font, TextFormat("%d", grid[i][j].bombsAround), { (float)(x + 2), (float)(y) }, POLE, 1, numberColor[grid[i][j].bombsAround]);
 					}
