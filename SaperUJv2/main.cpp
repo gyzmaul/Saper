@@ -266,7 +266,7 @@ int main()
 			if (CheckCollisionPointRec(GetMousePosition(), musicRec)) taskbarHighlight = 1;
 			if (CheckCollisionPointRec(GetMousePosition(), backMenu)) taskbarHighlight = 2;
 
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsKeyPressed(88))
 			{
 				if (CheckCollisionPointRec(GetMousePosition(), musicRec)) musicIsPlaying = !musicIsPlaying;
 				if (CheckCollisionPointRec(GetMousePosition(), backMenu)) status = 1;
@@ -321,7 +321,7 @@ int main()
 			if (CheckCollisionPointRec(GetMousePosition(), musicRec)) taskbarHighlight = 1;
 			if (CheckCollisionPointRec(GetMousePosition(), backMenu)) taskbarHighlight = 2;
 
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsKeyPressed(88))
 			{
 				if (CheckCollisionPointRec(GetMousePosition(), musicRec)) musicIsPlaying = !musicIsPlaying;
 				if (CheckCollisionPointRec(GetMousePosition(), backMenu)) status = 1;
@@ -345,7 +345,7 @@ int main()
 				}
 			}
 
-			if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+			if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) || IsKeyPressed(90))
 			{
 				coX = (GetMouseX() - SPACE + 1) / (POLE + SPACE);
 				coY = (GetMouseY() - menuHeight - 2*SPACE) / (POLE + SPACE);
