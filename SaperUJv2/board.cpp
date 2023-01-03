@@ -31,7 +31,7 @@ Color colorList[COLORS] = { GRAY , DARKGRAY , YELLOW , GOLD , ORANGE , GREEN , L
 const char* colorNames[COLORS] = { "GRAY" , "DARKGRAY" , "YELLOW" , "GOLD" , "ORANGE" , "GREEN" , "LIME" , "DARKGREEN" , "SKYBLUE" , "BLUE" , "DARKBLUE" , "PINK" , "PURPLE" , "VIOLET" , "DARKPURPLE" , "BEIGE" , "BROWN" , "PRO" };
 Rectangle colorsRec[COLORS];
 
-Color numberColor[9] = { RAYWHITE, BLUE, DARKGREEN, RED, DARKBLUE, BROWN, SKYBLUE, GOLD, DARKPURPLE };
+Color numberColor[9] = { BLACK, BLUE, DARKGREEN, RED, DARKBLUE, BROWN, DARKPURPLE, SKYBLUE, GOLD };
 
 Color backgrounds[2] = { BLACK, LIGHTGRAY };
 
@@ -389,6 +389,9 @@ void UnloadTexturesGame()
 
 void LoadTexturesMenu()
 {
+	int e;
+	e = rand() % 50;
+
 	menuBackground = LoadTexture("files/msaghMED.png");
 	Ranks = LoadTexture("files/ranks.png");
 	Cog = LoadTexture("files/cog.png");
@@ -397,7 +400,9 @@ void LoadTexturesMenu()
 	settingsBackground = LoadTexture("files/msaghMEDsettings.png");
 	arrow1 = LoadTexture("files/arrow1.png");
 	arrow2 = LoadTexture("files/arrow2.png");
-	logo = LoadTexture("files/logoAGH.png");
+
+	if (e == 0)logo = LoadTexture("files/logo5.png"); 
+	else logo = LoadTexture("files/logoAGH2.png");
 }
 
 void UnloadTexturesMenu()
