@@ -37,7 +37,7 @@ void OpenWindow(const char* caption, int x, int y)
 	SetWindowPosition(x, y);
 	SetTargetFPS(144);
 
-	windowIcon = LoadImage("files/logo2.png");
+	windowIcon = LoadImage("files/logo5.png");
 	SetWindowIcon(windowIcon);
 }
 
@@ -203,7 +203,7 @@ void CellFillNumbers(int sizeX, int sizeY, Cell** grid)
 	}
 }
 
-void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int startY)
+void CellSetBombs(int sizeX, int sizeY, int bombs, Cell** grid, int startX, int startY)
 {
 	for (int i = 0; i < sizeX; i++)
 	{
@@ -214,7 +214,7 @@ void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int start
 		}
 	}
 
-	for (int i = 0; i < nUJ; i++)
+	for (int i = 0; i < bombs; i++)
 	{
 		int bombX, bombY;
 		bombX = rand() % sizeX;
@@ -225,13 +225,13 @@ void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** grid, int startX, int start
 	}
 }
 
-void cellShuffle(int sizeX, int sizeY, int bombs, Cell** grid, int correct)
+void CellShuffle(int sizeX, int sizeY, int bombs, Cell** grid, int correct)
 {
 	for (int i = 0; i < sizeX; i++)
 	{
 		for (int j = 0; j < sizeY; j++)
 		{
-			if (grid[i][j].isBomb == 1 && grid[i][j].isFlag == 0) grid[i][j].isBomb = 0;
+			if (grid[i][j].isBomb && !grid[i][j].isFlag) grid[i][j].isBomb = 0;
 		}
 	}
 
@@ -241,7 +241,7 @@ void cellShuffle(int sizeX, int sizeY, int bombs, Cell** grid, int correct)
 		bombX = rand() % sizeX;
 		bombY = rand() % sizeY;
 
-		if (grid[bombX][bombY].isRevealed == 1 || grid[bombX][bombY].isFlag == 1 || grid[bombX][bombY].isBomb == 1) i--;
+		if (grid[bombX][bombY].isRevealed || grid[bombX][bombY].isFlag || grid[bombX][bombY].isBomb) i--;
 		else grid[bombX][bombY].isBomb = 1;
 	}
 }
@@ -380,7 +380,7 @@ void LoadTexturesMenu()
 	settingsBackground = LoadTexture("files/msaghMEDsettings.png");
 	arrow1 = LoadTexture("files/arrow1.png");
 	arrow2 = LoadTexture("files/arrow2.png");
-	logo = LoadTexture("files/logo2.png");
+	logo = LoadTexture("files/logo5.png");
 }
 
 void UnloadTexturesMenu()

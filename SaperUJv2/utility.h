@@ -1,14 +1,13 @@
 #pragma once
-#include <string>
 
 typedef struct Cell
 {
 	int i, j;
 	int bombsAround = 0;
-	bool isBomb;
+	bool isBomb = false;
 	bool isRevealed = false;
 	bool isFlag = false;
-};
+}Cell;
 
 Cell** fnMemoryAlloc(int nSizeX, int nSizeY, Cell** aTab);
 void fnMemoryFree(int sizeX, Cell** aTab);

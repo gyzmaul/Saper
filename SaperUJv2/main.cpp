@@ -110,7 +110,7 @@ int main()
 		{
 			while (status == 1 && menuScreen == 1) //main menu
 			{
-				windowSnap(screenWidth, screenHeight);
+				windowSnap(screenWidth, screenHeight + 2 * POLE + 3 * SPACE);
 
 				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
@@ -143,7 +143,7 @@ int main()
 
 			while (menuScreen == 2) //ranking
 			{
-				windowSnap(screenWidth, screenHeight);
+				windowSnap(screenWidth, screenHeight + 2 * POLE + 3 * SPACE);
 
 				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
@@ -163,7 +163,7 @@ int main()
 
 			while (menuScreen == 3) //settings
 			{
-				windowSnap(screenWidth, screenHeight);
+				windowSnap(screenWidth, screenHeight + 2 * POLE + 3 * SPACE);
 
 				if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
@@ -247,7 +247,7 @@ int main()
 
 		while (status==2)
 		{
-			windowSnap(screenWidth, screenHeight);
+			windowSnap(screenWidth, screenHeight + 2 * POLE + 3 * SPACE);
 
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
@@ -288,7 +288,7 @@ int main()
 
 		do //Setting up the board
 		{
-			CellSetUJ(sizeX, sizeY, bombs, grid, startX, startY);
+			CellSetBombs(sizeX, sizeY, bombs, grid, startX, startY);
 			CellFillNumbers(sizeX, sizeY, grid);
 		} while (grid[startX][startY].bombsAround > 0 || grid[startX][startY].isBomb == true); //first square must have 0 bombs around
 
@@ -300,7 +300,7 @@ int main()
 
 		while (status==3)
 		{
-			windowSnap(screenWidth, screenHeight);
+			windowSnap(screenWidth, screenHeight + 2 * POLE + 3 * SPACE);
 
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
@@ -333,12 +333,12 @@ int main()
 				{
 					if (CheckIndex(coX, coY, sizeX, sizeY))
 					{
-						int revealOld = *stillHidden;
+						int hiddedBuff = *stillHidden;
 						CellReveal(grid, coX, coY, sizeX, sizeY, &status, stillHidden);
 
-						if (gameMode == 4 && revealOld != *stillHidden && status == 3)
+						if (gameMode == 4 && hiddedBuff != *stillHidden && status == 3)
 						{
-							cellShuffle(sizeX, sizeY, bombs, grid, correct);
+							CellShuffle(sizeX, sizeY, bombs, grid, correct);
 							CellFillNumbers(sizeX, sizeY, grid);
 						}
 					}
@@ -378,7 +378,7 @@ int main()
 
 		while (status == 4)
 		{
-			windowSnap(screenWidth, screenHeight);
+			windowSnap(screenWidth, screenHeight + 2 * POLE + 3 * SPACE);
 
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
@@ -411,7 +411,7 @@ int main()
 
 		while (status == 5)
 		{
-			windowSnap(screenWidth, screenHeight);
+			windowSnap(screenWidth, screenHeight + 2 * POLE + 3 * SPACE);
 
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 

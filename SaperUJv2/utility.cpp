@@ -36,6 +36,38 @@ void fnMemoryFree(int sizeX, Cell** aTab)
 	free(aTab);
 }
 
+int** fnMemoryAllocInt(int nSizeX, int nSizeY, int** aTab)
+{
+	aTab = (int**)calloc(nSizeX, sizeof(int*));
+	if (aTab == NULL)
+	{
+		printf("MEMORY ERROR --code A1");
+		free(aTab);
+		system("pause");
+		exit(-1);
+	}
+
+	for (int i = 0; i < nSizeX; i++)
+	{
+		*(aTab + i) = (int*)calloc(nSizeY, sizeof(int));
+		if (*aTab == NULL)
+		{
+			printf("MEMORY ERROR --code B%d", i);
+			free(aTab);
+			system("pause");
+			exit(-1);
+		}
+	}
+
+	return aTab;
+}
+
+void fnMemoryFreeInt(int sizeX, int** aTab)
+{
+	for (int i = 0; i < sizeX; i++) free(aTab[i]);
+	free(aTab);
+}
+
 void CellIndex(Cell** grid, int sizeX, int sizeY)
 {
 	for (int i = 0; i < sizeX; i++)
@@ -74,38 +106,6 @@ int FlagCount(Cell** grid, int a, int b, int sizeX, int sizeY)
 void CheckWin(int bombs, int stillHidden, int* status)
 {
 	if (stillHidden == bombs) *status = 5;
-}
-
-int** fnMemoryAllocInt(int nSizeX, int nSizeY, int** aTab)
-{
-	aTab = (int**)calloc(nSizeX, sizeof(int*));
-	if (aTab == NULL)
-	{
-		printf("MEMORY ERROR --code A1");
-		free(aTab);
-		system("pause");
-		exit(-1);
-	}
-
-	for (int i = 0; i < nSizeX; i++)
-	{
-		*(aTab + i) = (int*)calloc(nSizeY, sizeof(int));
-		if (*aTab == NULL)
-		{
-			printf("MEMORY ERROR --code B%d", i);
-			free(aTab);
-			system("pause");
-			exit(-1);
-		}
-	}
-
-	return aTab;
-}
-
-void fnMemoryFreeInt(int sizeX, int** aTab)
-{
-	for (int i = 0; i < sizeX; i++) free(aTab[i]);
-	free(aTab);
 }
 
 void updateRanks(int time, int** nRanking, int mode)
@@ -152,7 +152,7 @@ void windowSnap(int width, int height)
 	Vector2 position = GetWindowPosition();
 
 	if (position.y < 0) SetWindowPosition(position.x, 0);
-	if (position.y + height + 2 * POLE + 3 * SPACE > GetMonitorHeight(0)) SetWindowPosition(position.x, GetMonitorHeight(0) - height - 46);
+	if (position.y + height > GetMonitorHeight(0)) SetWindowPosition(position.x, GetMonitorHeight(0) - height);
 
 	if (position.x < 0) SetWindowPosition(0, position.y);
 	if (position.x + width > GetMonitorWidth(0)) SetWindowPosition(GetMonitorWidth(0) - width, position.y);

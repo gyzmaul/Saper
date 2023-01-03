@@ -19,10 +19,10 @@
 #define MONITORWIDTH 1920
 
 void CellDraw(Cell** grid, int status);
-void CellSetUJ(int sizeX, int sizeY, int nUJ, Cell** aTab, int startX, int startY);
+void CellSetBombs(int sizeX, int sizeY, int nUJ, Cell** aTab, int startX, int startY);
 void CellFillNumbers(int sizeX, int sizeY, Cell** grid);
 void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int*status, int* revealed);
-void cellShuffle(int sizeX, int sizeY, int nUJ, Cell** grid, int correct);
+void CellShuffle(int sizeX, int sizeY, int nUJ, Cell** grid, int correct);
 
 void sizeEasy(int* x, int* y, int* b);
 void sizeMed(int* x, int* y, int* b);
