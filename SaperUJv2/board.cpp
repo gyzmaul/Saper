@@ -31,7 +31,7 @@ Color colorList[COLORS] = { GRAY , DARKGRAY , YELLOW , GOLD , ORANGE , GREEN , L
 const char* colorNames[COLORS] = { "GRAY" , "DARKGRAY" , "YELLOW" , "GOLD" , "ORANGE" , "GREEN" , "LIME" , "DARKGREEN" , "SKYBLUE" , "BLUE" , "DARKBLUE" , "PINK" , "PURPLE" , "VIOLET" , "DARKPURPLE" , "BEIGE" , "BROWN" , "PRO" };
 Rectangle colorsRec[COLORS];
 
-Color numberColor[9] = { RAYWHITE, BLUE, DARKGREEN, RED, DARKBLUE, BROWN, SKYBLUE, GOLD, MAGENTA };
+Color numberColor[9] = { RAYWHITE, BLUE, DARKGREEN, RED, DARKBLUE, BROWN, SKYBLUE, GOLD, DARKPURPLE };
 
 Color backgrounds[2] = { BLACK, LIGHTGRAY };
 
