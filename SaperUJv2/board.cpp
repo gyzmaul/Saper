@@ -27,9 +27,15 @@ Rectangle backRec = { 30, 10, 68, 40 };
 
 Color kolor = GRAY;
 
-Color colorList[COLORS] = { GRAY , DARKGRAY , YELLOW , GOLD , ORANGE , GREEN , LIME , DARKGREEN , SKYBLUE , BLUE , DARKBLUE , PINK , PURPLE , VIOLET , DARKPURPLE , BEIGE , BROWN , RAYWHITE };
-const char* colorNames[COLORS] = { "GRAY" , "DARKGRAY" , "YELLOW" , "GOLD" , "ORANGE" , "GREEN" , "LIME" , "DARKGREEN" , "SKYBLUE" , "BLUE" , "DARKBLUE" , "PINK" , "PURPLE" , "VIOLET" , "DARKPURPLE" , "BEIGE" , "BROWN" , "RAYWHITE" };
+Color colorList[COLORS] = { GRAY , DARKGRAY , YELLOW , GOLD , ORANGE , GREEN , LIME , DARKGREEN , SKYBLUE , BLUE , DARKBLUE , PINK , PURPLE , VIOLET , DARKPURPLE , BEIGE , BROWN , GRAY };
+const char* colorNames[COLORS] = { "GRAY" , "DARKGRAY" , "YELLOW" , "GOLD" , "ORANGE" , "GREEN" , "LIME" , "DARKGREEN" , "SKYBLUE" , "BLUE" , "DARKBLUE" , "PINK" , "PURPLE" , "VIOLET" , "DARKPURPLE" , "BEIGE" , "BROWN" , "PRO" };
 Rectangle colorsRec[COLORS];
+
+Color numberColor[9] = { RAYWHITE, BLUE, DARKGREEN, RED, DARKBLUE, BROWN, SKYBLUE, GOLD, MAGENTA };
+
+Color backgrounds[2] = { BLACK, LIGHTGRAY };
+
+int nBG = 0;
 
 void OpenWindow(const char* caption, int x, int y)
 {
@@ -128,7 +134,16 @@ void CellDraw(Cell** grid, int status)
 			if (grid[i][j].isBomb == 1 && status == 4 && grid[i][j].isFlag == 0) DrawTexture(UJbomb, x, y, WHITE);
 			else if (grid[i][j].isRevealed == true && grid[i][j].isFlag == false)
 			{
-				if (hiddenAround > 0) DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
+				if (hiddenAround > 0)
+				{
+					if (nBG == 1)
+					{
+						//DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, numberColor[grid[i][j].bombsAround]);
+						if (grid[i][j].bombsAround == 1) DrawTextEx(font, TextFormat("%d", grid[i][j].bombsAround), { (float)(x + 6), (float)(y) }, POLE, 1, numberColor[grid[i][j].bombsAround]);
+						else DrawTextEx(font, TextFormat("%d", grid[i][j].bombsAround), { (float)(x + 2), (float)(y) }, POLE, 1, numberColor[grid[i][j].bombsAround]);
+					}
+					else DrawText(TextFormat("%d", grid[i][j].bombsAround), x + 6, y, POLE, WHITE);
+				}
 			}
 			else DrawRectangle(x, y, POLE, POLE, kolor);
 
@@ -248,6 +263,8 @@ void CellShuffle(int sizeX, int sizeY, int bombs, Cell** grid, int correct)
 
 void DrawTaskbar(int bombsLeft, int time)
 {
+	ClearBackground(backgrounds[nBG]);
+
 	DrawRectangle(0, 0, screenWidth, menuHeight, DARKGRAY);
 	DrawRectangle(0, screenHeight - menuHeight, screenWidth, menuHeight, DARKGRAY);
 	//DrawRectangle(0, menuHeight - MARGINES, screenWidth, 2, DARKGRAY);
@@ -380,7 +397,7 @@ void LoadTexturesMenu()
 	settingsBackground = LoadTexture("files/msaghMEDsettings.png");
 	arrow1 = LoadTexture("files/arrow1.png");
 	arrow2 = LoadTexture("files/arrow2.png");
-	logo = LoadTexture("files/logo5.png");
+	logo = LoadTexture("files/logoAGH.png");
 }
 
 void UnloadTexturesMenu()
@@ -410,10 +427,12 @@ void changeColor(int* cellColor)
 {
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
-		for(int i = 0; i < COLORS; i++)
+		for(int i = 0; i < COLORS-1; i++)
 		{
-			if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) { kolor = colorList[i]; *cellColor = i; }
+			if (CheckCollisionPointRec(GetMousePosition(), colorsRec[i])) { kolor = colorList[i]; *cellColor = i; nBG = 0; }
 		}
+		if (CheckCollisionPointRec(GetMousePosition(), colorsRec[COLORS-1])) { kolor = colorList[COLORS - 1]; *cellColor = COLORS - 1; nBG = 1; }
+
 	}
 }
 
@@ -425,4 +444,7 @@ void setColors(int cellColor)
 	{
 		colorsRec[i] = { 56, (float) 86 + i * 28, (float)(2 * screenWidth / 3 + 18), 24 };
 	}
+
+	if (cellColor == (COLORS - 1)) nBG = 1;
+	else nBG = 0;
 }

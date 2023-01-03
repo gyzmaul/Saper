@@ -252,7 +252,6 @@ int main()
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 			BeginDrawing();
-			ClearBackground(BLACK);
 
 			DrawTaskbar((bombs - flagsSet), (*timeTemp - *timeStart) / CLOCKS_PER_SEC);
 
@@ -305,7 +304,6 @@ int main()
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 			BeginDrawing();
-			ClearBackground(BLACK);
 
 			DrawTaskbar((bombs-flagsSet), (*timeTemp-*timeStart)/CLOCKS_PER_SEC);
 
@@ -383,7 +381,6 @@ int main()
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 			BeginDrawing();
-			ClearBackground(BLACK);
 
 			DrawTaskbar((bombs - flagsSet), (*timeStop - *timeStart) / CLOCKS_PER_SEC);
 
@@ -416,7 +413,6 @@ int main()
 			if (musicIsPlaying == 1) UpdateMusicStream(gameOst);
 
 			BeginDrawing();
-			ClearBackground(BLACK);
 
 			DrawTaskbar(0, (*timeStop - *timeStart) / CLOCKS_PER_SEC);
 
