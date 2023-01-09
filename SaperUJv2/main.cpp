@@ -257,7 +257,7 @@ int main()
 
 			DrawBottomBar(musicIsPlaying, taskbarHighlight);
 
-			CellDraw(grid, status);
+			CellDraw(grid, status, gameMode);
 
 			EndDrawing();
 
@@ -309,7 +309,7 @@ int main()
 
 			DrawBottomBar(musicIsPlaying, taskbarHighlight);
 
-			CellDraw(grid, status);
+			CellDraw(grid, status, gameMode);
 
 			EndDrawing();
 
@@ -386,7 +386,7 @@ int main()
 
 			DrawText(TextFormat("Przegrales"), screenWidth / 2 - 86, screenHeight - menuHeight + 12, 1.5 * POLE, RED);
 
-			CellDraw(grid, status);
+			CellDraw(grid, status, gameMode);
 
 			EndDrawing();
 
@@ -418,7 +418,7 @@ int main()
 
 			DrawText(TextFormat("Wygrales"), screenWidth / 2 - 72, screenHeight - menuHeight + 12, 1.5 * POLE, GREEN);
 
-			CellDraw(grid, status);
+			CellDraw(grid, status, gameMode);
 
 			EndDrawing();
 

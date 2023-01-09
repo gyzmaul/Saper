@@ -18,7 +18,7 @@
 #define MONITORHEIGHT 1080
 #define MONITORWIDTH 1920
 
-void CellDraw(Cell** grid, int status);
+void CellDraw(Cell** grid, int status, int mode);
 void CellSetBombs(int sizeX, int sizeY, int nUJ, Cell** aTab, int startX, int startY);
 void CellFillNumbers(int sizeX, int sizeY, Cell** grid);
 void CellReveal(Cell** grid, int i, int j, int sizeX, int sizeY, int*status, int* revealed);

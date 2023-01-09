@@ -18,7 +18,7 @@ int screenWidth = POLE * sizeX + SPACE * (sizeX - 1) + MARGINES * 2;
 
 Image windowIcon;
 
-Texture2D AGHFlag, UJbomb, redX, musicIcon, homeIcon;
+Texture2D AGHFlag, UJbomb, redX, musicIcon, homeIcon, BiwoC;
 Texture2D menuBackground, Ranks, Cog, Biwo, rankBackground, settingsBackground, arrow1, arrow2, logo;
 
 Font font = { 0 };
@@ -107,7 +107,7 @@ void sizeHard(int* x, int* y, int* b)
 
 }
 
-void CellDraw(Cell** grid, int status)
+void CellDraw(Cell** grid, int status, int mode)
 {
 	for (int i = 0; i < sizeX; i++)
 	{
@@ -131,7 +131,11 @@ void CellDraw(Cell** grid, int status)
 				}
 			}
 
-			if (grid[i][j].isBomb == 1 && status == 4 && grid[i][j].isFlag == 0) DrawTexture(UJbomb, x, y, WHITE);
+			if (grid[i][j].isBomb == 1 && status == 4 && grid[i][j].isFlag == 0)
+			{
+				if (mode == 4) DrawTexture(BiwoC, x, y, WHITE);
+				else DrawTexture(UJbomb, x, y, WHITE);
+			}
 			else if (grid[i][j].isRevealed == true && grid[i][j].isFlag == false)
 			{
 				if (hiddenAround > 0)
@@ -375,6 +379,7 @@ void LoadTexturesGame()
 	redX = LoadTexture("files/redX.png");
 	musicIcon = LoadTexture("files/music_icon_v2.png");
 	homeIcon = LoadTexture("files/Home.png");
+	BiwoC = LoadTexture("files/biwoC.png");
 }
 
 void UnloadTexturesGame()
@@ -384,6 +389,7 @@ void UnloadTexturesGame()
 	UnloadTexture(redX);
 	UnloadTexture(musicIcon);
 	UnloadTexture(homeIcon);
+	UnloadTexture(BiwoC);
 }
 
 void LoadTexturesMenu()
